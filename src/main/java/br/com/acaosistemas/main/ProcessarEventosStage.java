@@ -24,6 +24,7 @@ public class ProcessarEventosStage {
 		ClienteWSAssinarEvento       clientWS             = new ClienteWSAssinarEvento();
 		UBIEsocialEventosStageDAO    ubesDAO              = new UBIEsocialEventosStageDAO();
 		List<UBIEsocialEventosStage> listaUbiEventosStage = new ArrayList<UBIEsocialEventosStage>();
+		UBIEsocialEventosStageLog    ubel                 = new UBIEsocialEventosStageLog();
 		
 		listaUbiEventosStage = ubesDAO.listUBIEsocialEventosStage();
 				
@@ -40,6 +41,20 @@ public class ProcessarEventosStage {
 				// PROCESSAMENTO_COM_SUCESSO (198)
 				ubesRow.setStatus(StatusEsocialEventosStageEnum.ASSINADO_COM_SUCESSO);
 				ubesDAO.updateStatus(ubesRow);
+				
+				// Insere no log o resultado da chamada do web service
+				ubel.setUbesDtMov(ubesRow.getDtMov());
+				ubel.setDtMov(new Timestamp(System.currentTimeMillis()));
+				ubel.setMensagem(Versao.getStringVersao() +
+						         "\n"                     +
+						         StatusEsocialEventosStageEnum.ASSINADO_COM_SUCESSO.getDescricao());
+				ubel.setStatus(StatusEsocialEventosStageEnum.ASSINADO_COM_SUCESSO);
+				ubel.setNumErro(0L);
+				
+				UBIEsocialEventosStageLogDAO ubelDAO = new UBIEsocialEventosStageLogDAO();				
+				ubelDAO.insert(ubel);
+				ubelDAO.closeConnection();
+				
 			} catch (MalformedURLException e) {
 				// Caso a chamada do web service do correio retornar a excecao
 				// MalformedURLException, faz a atualizacao do status com o
