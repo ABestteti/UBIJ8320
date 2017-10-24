@@ -10,7 +10,6 @@ import java.util.List;
 import br.com.acaosistemas.db.dao.UBIEsocialEventosStageDAO;
 import br.com.acaosistemas.db.dao.UBIEsocialEventosStageLogDAO;
 import br.com.acaosistemas.db.enumeration.StatusEsocialEventosStageEnum;
-import br.com.acaosistemas.db.enumeration.StatusPoboxXMLEnum;
 import br.com.acaosistemas.db.model.UBIEsocialEventosStage;
 import br.com.acaosistemas.db.model.UBIEsocialEventosStageLog;
 import br.com.acaosistemas.frw.util.ExceptionUtils;

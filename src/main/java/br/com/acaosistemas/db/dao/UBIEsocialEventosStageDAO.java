@@ -4,18 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import br.com.acaosistemas.db.connection.ConnectionFactory;
 import br.com.acaosistemas.db.enumeration.SimNaoEnum;
 import br.com.acaosistemas.db.enumeration.StatusEsocialEventosStageEnum;
-import br.com.acaosistemas.db.enumeration.StatusPoboxXMLEnum;
-import br.com.acaosistemas.db.enumeration.TipoRecursoPoboxXMLEnum;
 import br.com.acaosistemas.db.model.UBIEsocialEventosStage;
-import br.com.acaosistemas.db.model.UBIPoboxXml;
-import br.com.acaosistemas.db.model.UBIPoboxXmlLog;
 
 public class UBIEsocialEventosStageDAO {
 

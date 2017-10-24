@@ -7,16 +7,12 @@ import java.sql.SQLException;
 import br.com.acaosistemas.db.connection.ConnectionFactory;
 import br.com.acaosistemas.db.connection.DBConnectionInfo;
 import br.com.acaosistemas.db.dao.UBIRuntimesDAO;
-import br.com.acaosistemas.wsclientes.ClienteWSAssinarEvento;
-import br.com.acaosistemas.wsclientes.ClienteWSConsultarLote;
-import br.com.acaosistemas.wsclientes.ClienteWSCorreios;
-import br.com.acaosistemas.wsclientes.ClienteWSEnviarLote;
 import oracle.jdbc.OracleTypes;
 
 public class Daemon {
 
-	private static final int STOP_DAEMON      = 4;
-	private static final int CONSULTAR_STATUS = 5;
+	private static final int STOP_DAEMON      = 1;
+	private static final int CONSULTAR_STATUS = 2;
 	
 	private static final int DEAMON_ALIVE     = 1;
 
@@ -29,7 +25,7 @@ public class Daemon {
 			System.out.println(Versao.ver()+"\n");
 			System.out.println("Quantidade de parametros insuficientes.");
 			System.out.println("Utilize o comando abaixo para executar a aplicacao, utilizando o Java 1.8 ou superior:");
-			System.out.println("java -jar UBIJ8200.jar usuarioDB senhaDB servidorDB:portaListner:instanciaDB");
+			System.out.println("java -jar UBIJ8320.jar usuarioDB senhaDB servidorDB:portaListner:instanciaDB");
 			System.exit(1);
 		}
 		
@@ -66,7 +62,7 @@ public class Daemon {
 		// Objects de acesso as tabelas do banco de dados
 		UBIRuntimesDAO runtimeDAO = new UBIRuntimesDAO();
 		
-		pipeName = runtimeDAO.getRuntimeValue("PIPEUBI");
+		pipeName = runtimeDAO.getRuntimeValue("PIPEUBIASSEVT");
 		runtimeDAO.closeConnection();
 		
 		// Abre conexao com o banco para leitura do pipe do
@@ -159,8 +155,8 @@ public class Daemon {
 				throw new RuntimeException(e) ;
 			}
 			
-			// Inicia o processo de leitura dos registros n�o processados
-			// na tabela UBI_POBOX_XML
+			// Inicia o processo de leitura dos registros da tabela de stage
+			// cujo status seja A_ASSINAR (201)
 			new ProcessarEventosStage().lerRegistrosNaoProcessados();
 		}
 		
