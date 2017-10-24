@@ -3,11 +3,13 @@ package br.com.acaosistemas.wsclientes;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 
 import br.com.acaosistemas.db.dao.UBIEsocialEventosStageDAO;
 import br.com.acaosistemas.db.dao.UBIRuntimesDAO;
 import br.com.acaosistemas.db.model.UBIEsocialEventosStage;
+import br.com.acaosistemas.frw.util.ExceptionUtils;
 import br.com.acaosistemas.frw.util.HttpUtils;
 
 /**
@@ -25,16 +27,10 @@ public class ClienteWSAssinarEvento {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public void execWebService(String pRowID) {
+	public void execWebService(UBIEsocialEventosStage pUbesRow) throws MalformedURLException, IOException {
 		String parametros = new String();
 		String wsEndPoint;
 		
-		// Objeto de representacao de um registro da
-		// da tabela UBI_POBOX_XML
-		UBIEsocialEventosStage ubes;
-		
-		// Objects de acesso as tabelas do banco de dados
-		UBIEsocialEventosStageDAO ubesDAO = new UBIEsocialEventosStageDAO();
 		UBIRuntimesDAO runtimeDAO = new UBIRuntimesDAO();
 		
 		// Recupera do banco de dados a informacao do runtime UBIWSASSINAEVT
@@ -42,14 +38,10 @@ public class ClienteWSAssinarEvento {
 		
 		// Fecha a conexao com o banco de dados
 		runtimeDAO.closeConnection();
-		
-		// Recupera do banco de dados as informacoes da tabela
-		// UBI_EVENTOS_ESOCIAL_STAGE
-		ubes = ubesDAO.getUBIEsocialEventosStage(pRowID);
 
 		// Monta o parametro de chamada do web service
 		// O formato da data deve ser o seguinte: YYYY-MM-DD/HH24:MI:SS.FF
-		parametros  = ubes.getDtMov().toString().replaceAll(" ", "/");
+		parametros  = pUbesRow.getDtMov().toString().replaceAll(" ", "/");
 		
 		try {
 			URL url = new URL(wsEndPoint+parametros);
@@ -66,7 +58,20 @@ public class ClienteWSAssinarEvento {
 			request.connect();
 			
 			if (request.getResponseCode() != HttpURLConnection.HTTP_OK) {
-				throw new RuntimeException("HTTP error code : "+ request.getResponseCode() + " [" + wsEndPoint + "]");
+			    if (request.getResponseCode() == HttpURLConnection.HTTP_INTERNAL_ERROR) {
+				    throw new MalformedURLException("Código HTTP retornado: " + 
+			                                        request.getResponseCode() + 
+			                                        " [" + wsEndPoint + "]\n" +
+			                                        "Parâmetros: "            + 
+			                                        parametros);
+			    }
+			    else {
+			    	    throw new IOException("Código HTTP retornado: "     + 
+			                              request.getResponseCode() + 
+			                              " [" + wsEndPoint + "]\n" +
+			                              "Parâmetros: "            +
+			                              parametros);
+			    }
 			}
 			else {
 				System.out.println("HTTP code .....: " + request.getResponseMessage());
@@ -74,9 +79,11 @@ public class ClienteWSAssinarEvento {
 			}
 						
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			throw new MalformedURLException(e.getMessage()+":\n"+ExceptionUtils.stringStackTrace(e));
+		} catch (SocketTimeoutException e) {
+			throw new SocketTimeoutException(e.getMessage()+":\n"+ExceptionUtils.stringStackTrace(e));
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new IOException(e.getMessage()+":\n"+ExceptionUtils.stringStackTrace(e));
 		}
 	}
 }

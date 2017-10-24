@@ -125,7 +125,7 @@ public class ClienteWSCorreios {
 		if (pUbpxRow.getWsEndpoint() == null) {
 			// Caso nao exista o endereco de endpoint definido, deve ser gerado uma excecao 
 			// para invalidar o envolope lido do banco de dados.
-			throw new IOException("Não foi definido no envelope o endereço de endpoint remoto.");
+			throw new IOException("Nï¿½o foi definido no envelope o endereï¿½o de endpoint remoto.");
 		}
 		
 		// Recupera o endereco de endpoint do web service da ubi_pobox_xml
@@ -179,17 +179,17 @@ public class ClienteWSCorreios {
 			    System.out.println("HTTP error code : "+ request.getResponseCode() + " [" + wsEndPoint + "]");
 			    
 			    if (request.getResponseCode() == HttpURLConnection.HTTP_INTERNAL_ERROR) {
-				    throw new MalformedURLException("Código HTTP retornado: " + 
+				    throw new MalformedURLException("CÃ³digo HTTP retornado: " + 
 			                                        request.getResponseCode() + 
 			                                        " [" + wsEndPoint + "]\n" +
-			                                        "Parâmetros: "            + 
+			                                        "ParÃ¢metros: "            + 
 			                                        parametros);
 			    }
 			    else {
-			    	throw new IOException("Código HTTP retornado: "     + 
+			    	throw new IOException("CÃ³digo HTTP retornado: "     + 
 			                              request.getResponseCode() + 
 			                              " [" + wsEndPoint + "]\n" +
-			                              "Parâmetros: "            +
+			                              "ParÃ¢metros: "            +
 			                              parametros);
 			    }
 			}

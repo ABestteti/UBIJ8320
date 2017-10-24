@@ -2,19 +2,19 @@ package br.com.acaosistemas.db.enumeration;
 
 public enum SimNaoEnum {
     /**
-     * Enumeração para SIM.
+     * Enumeracao para SIM.
      */
     SIM("S", "Sim"),
     /**
-     * Enumeração para Não.
+     * Enumeracao para Nï¿½o.
      */
-    NAO("N", "Não");
+    NAO("N", "NÃ£o");
     private String id;
     private String descricao;
 
     /**
-     * Construtor padrão para a Enum.
-     * @param id com o código.
+     * Construtor padrao para a Enum.
+     * @param id com o codigo.
      * @param descricao com descritivo da Enum.
      */
     SimNaoEnum(final String id, final String descricao) {
@@ -39,11 +39,11 @@ public enum SimNaoEnum {
     }
 
     /**
-     * Recupera a enumeração com base no identificador.
+     * Recupera a enumeracao com base no identificador.
      *
      * @param id
      *            Valor para o identificador.
-     * @return A enumeração alcançada.
+     * @return A enumeracao alcancada.
      */
     public static SimNaoEnum getById(final String id) {
         SimNaoEnum result = null;

@@ -159,9 +159,9 @@ public class Daemon {
 				throw new RuntimeException(e) ;
 			}
 			
-			// Inicia o processo de leitura dos registros não processados
+			// Inicia o processo de leitura dos registros nï¿½o processados
 			// na tabela UBI_POBOX_XML
-			new ProcessarUbiPoboxXml().lerRegistrosNaoProcessados();
+			new ProcessarEventosStage().lerRegistrosNaoProcessados();
 		}
 		
 		try {
