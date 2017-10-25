@@ -9,10 +9,21 @@ import br.com.acaosistemas.db.connection.DBConnectionInfo;
 import br.com.acaosistemas.db.dao.UBIRuntimesDAO;
 import oracle.jdbc.OracleTypes;
 
+/**
+ * 
+ * @author Anderson Bestteti
+ * Classe reponsavel por ler o pipe de comunicacao do banco
+ * 
+ * Referencias:
+ *  https://stackoverflow.com/questions/19333011/how-to-call-a-stored-function-from-jdbc
+ *  http://docs.oracle.com/cd/A84870_01/doc/java.816/a81354/samapp2.htm
+ *  https://docs.oracle.com/cd/B19306_01/java.102/b14355/toc.htm
+ */
 public class Daemon {
 
-	private static final int STOP_DAEMON      = 1;
-	private static final int CONSULTAR_STATUS = 2;
+	private static final int STOP_DAEMON             = 1;
+	private static final int CONSULTAR_STATUS        = 2;
+	private static final int CONSULTAR_VERSAO_DAEMON = 3;
 	
 	private static final int DEAMON_ALIVE     = 1;
 
@@ -140,6 +151,14 @@ public class Daemon {
 					// rodando.
 					statusDaemon(pipeConteudo);
 			     	break;
+				case CONSULTAR_VERSAO_DAEMON:
+					System.out.println("Recebido comando versao do servico!");
+					
+					// Nesse caso o objeto pipeConteudo armazena o nome do
+					// pipe de retorno que sera usado para enviar a versao
+					// deste servico de volta para o PL/SQL.
+					versaoDaemon(pipeConteudo);
+			     	break;	
 				case STOP_DAEMON:
 					System.out.println("Recebido comando stop do servico!");
 					stopDeamon = true;
@@ -185,6 +204,32 @@ public class Daemon {
 			// Manda para o pipe o status que representa que o
 			// o deamon esta rodando.
 			stmt.setInt(1, DEAMON_ALIVE);
+			stmt.registerOutParameter(2, OracleTypes.NUMBER);			
+			stmt.setString(3, pPipeReturn);
+			
+			stmt.execute();
+			
+			stmt.close();
+			
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}	    
+	}
+	
+	private void versaoDaemon(String pPipeReturn) {
+		try {
+			if (!stmt.isClosed()) {
+				stmt.close();
+			}
+			
+			// Retorna o status do deamon, informando
+			// que ele esta ativo: DEAMON_ALIVE
+			//dbms_pipe.pack_message(pipe_name);
+			stmt = conn.prepareCall("BEGIN dbms_pipe.pack_message(?); ? := dbms_pipe.send_message(?,2); END;");
+			
+			// Manda para o pipe o status que representa que o
+			// o deamon esta rodando.
+			stmt.setString(1, Versao.getStringVersao());
 			stmt.registerOutParameter(2, OracleTypes.NUMBER);			
 			stmt.setString(3, pPipeReturn);
 			
