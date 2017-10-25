@@ -31,7 +31,7 @@ public class UBIEsocialEventosStageLogDAO {
 		
 		try {
 			stmt = conn.prepareStatement(
-					"INSERT INTO ubi_eventos_esocial_stage_logs (dt_mov,ubes_dt_mov,mensagem,status,num_erro) VALUES (?,?,?,?,?)");
+					"INSERT INTO ubi_eventos_esocial_stage_logs (ubes_dt_mov,dt_mov,mensagem,status,num_erro) VALUES (?,?,?,?,?)");
 		
 			stmt.setTimestamp(1, pUbelRow.getUbesDtMov());
 			stmt.setTimestamp(2, pUbelRow.getDtMov());
