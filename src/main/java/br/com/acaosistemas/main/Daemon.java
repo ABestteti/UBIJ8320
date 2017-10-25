@@ -80,7 +80,7 @@ public class Daemon {
 		// banco de dados.
 		conn = new ConnectionFactory().getConnection();
 		
-		System.out.println("Processando registros dos correios...");
+		System.out.println("Processando registros da área de stage...");
 		
 		// Loop para leitura constante do pipe de comunicacao
 		// do deamon e por procura de registros com status 0 (nao processado)
