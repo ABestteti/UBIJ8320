@@ -45,9 +45,7 @@ public class ProcessarEventosStage {
 				// Insere no log o resultado da chamada do web service
 				ubel.setUbesDtMov(ubesRow.getDtMov());
 				ubel.setDtMov(new Timestamp(System.currentTimeMillis()));
-				ubel.setMensagem(Versao.getStringVersao() +
-						         "\n"                     +
-						         StatusEsocialEventosStageEnum.ASSINADO_COM_SUCESSO.getDescricao());
+				ubel.setMensagem(StatusEsocialEventosStageEnum.ASSINADO_COM_SUCESSO.getDescricao());
 				ubel.setStatus(StatusEsocialEventosStageEnum.ASSINADO_COM_SUCESSO);
 				ubel.setNumErro(0L);
 				
