@@ -37,8 +37,8 @@ public class ProcessarEventosStage {
 			try {
 				clientWS.execWebService(ubesRow);
 				
-				// Atualiza o status da tabela UBI_POBOX_XML para
-				// PROCESSAMENTO_COM_SUCESSO (198)
+				// Atualiza o status da tabela UBI_EVENTOS_ESOCIAL_STAGE para
+				// ASSINADO_COM_SUCESSO (298)
 				ubesRow.setStatus(StatusEsocialEventosStageEnum.ASSINADO_COM_SUCESSO);
 				ubesDAO.updateStatus(ubesRow);
 				
@@ -83,12 +83,12 @@ public class ProcessarEventosStage {
 		
 		ubpxDAO.updateStatus(pUbesRow);
 		
-		// Grava na tabela UBI_POBOX_XML_LOG a string com a mensagem de
+		// Grava na tabela UBI_EVENTOS_ESOCIAL_STAGE_LOGS a string com a mensagem de
 		// erro completa				
 		UBIEsocialEventosStageLogDAO ubelDAO = new UBIEsocialEventosStageLogDAO();
 		UBIEsocialEventosStageLog    ubel    = new UBIEsocialEventosStageLog();
 		
-		ubel.setDtMov(pUbesRow.getDtMov());
+		ubel.setUbesDtMov(pUbesRow.getDtMov());
 		ubel.setDtMov(new Timestamp(System.currentTimeMillis()));
 		ubel.setStatus(pUbesRow.getStatus());
 		ubel.setMensagem(pUbesRow.getStatus().getDescricao() +
