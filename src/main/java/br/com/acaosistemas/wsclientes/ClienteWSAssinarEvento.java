@@ -6,7 +6,6 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 
-import br.com.acaosistemas.db.dao.UBIEsocialEventosStageDAO;
 import br.com.acaosistemas.db.dao.UBIRuntimesDAO;
 import br.com.acaosistemas.db.model.UBIEsocialEventosStage;
 import br.com.acaosistemas.frw.util.ExceptionUtils;
