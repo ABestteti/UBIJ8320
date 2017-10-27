@@ -75,7 +75,7 @@ public class ProcessarEventosStage {
 		}
 		
 		ubesDAO.closeConnection();
-		System.out.println("   Finalizado processomento da UBI_ESOCIAL_EVENTOS_STAGE.");
+		System.out.println("   Finalizado processomento da UBI_EVENTOS_ESOCIAL_STAGE.");
 	}
 	
 	private void gravaExcecaoLog(UBIEventosEsocialStage pUbesRow, Exception pException) {
