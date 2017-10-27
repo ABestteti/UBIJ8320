@@ -5,15 +5,20 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import br.com.acaosistemas.db.connection.ConnectionFactory;
-import br.com.acaosistemas.db.model.UBIEsocialEventosStageLog;
+import br.com.acaosistemas.db.model.UBIEventosEsStageLog;
 import br.com.acaosistemas.main.Versao;
 
-public class UBIEsocialEventosStageLogDAO {
+/**
+ * DAO para manipulacao da tabela UBI_EVENTOS_ES_STAGE_LOGS
+ * 
+ * @author Anderson Bestteti Santos
+ *
+ */
+public class UBIEventosEsStageLogDAO {
 
 	private Connection                conn;
-	private UBIEsocialEventosStageLog ubel;
 	
-	public UBIEsocialEventosStageLogDAO() {
+	public UBIEventosEsStageLogDAO() {
 		conn = new ConnectionFactory().getConnection();
 	}
 
@@ -26,12 +31,12 @@ public class UBIEsocialEventosStageLogDAO {
 		}
 	}
 	
-	public void insert(UBIEsocialEventosStageLog pUbelRow) {
+	public void insert(UBIEventosEsStageLog pUbelRow) {
 		PreparedStatement stmt = null;
 		
 		try {
 			stmt = conn.prepareStatement(
-					"INSERT INTO ubi_eventos_esocial_stage_logs (ubes_dt_mov,dt_mov,mensagem,status,num_erro) VALUES (?,?,?,?,?)");
+					"INSERT INTO ubi_eventos_es_stage_logs (ubes_dt_mov,dt_mov,mensagem,status,num_erro) VALUES (?,?,?,?,?)");
 		
 			stmt.setTimestamp(1, pUbelRow.getUbesDtMov());
 			stmt.setTimestamp(2, pUbelRow.getDtMov());

@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 import br.com.acaosistemas.db.enumeration.StatusEsocialEventosStageEnum;
 
-public class UBIEsocialEventosStageLog {
+public class UBIEventosEsStageLog {
 
 	private Timestamp dtMov;
 	private Timestamp ubesDtMov;

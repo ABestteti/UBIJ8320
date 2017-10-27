@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.acaosistemas.db.dao.UBIEsocialEventosStageDAO;
-import br.com.acaosistemas.db.dao.UBIEsocialEventosStageLogDAO;
+import br.com.acaosistemas.db.dao.UBIEventosEsStageLogDAO;
 import br.com.acaosistemas.db.enumeration.StatusEsocialEventosStageEnum;
 import br.com.acaosistemas.db.model.UBIEsocialEventosStage;
-import br.com.acaosistemas.db.model.UBIEsocialEventosStageLog;
+import br.com.acaosistemas.db.model.UBIEventosEsStageLog;
 import br.com.acaosistemas.frw.util.ExceptionUtils;
 import br.com.acaosistemas.wsclientes.ClienteWSAssinarEvento;
 
@@ -24,7 +24,7 @@ public class ProcessarEventosStage {
 		ClienteWSAssinarEvento       clientWS             = new ClienteWSAssinarEvento();
 		UBIEsocialEventosStageDAO    ubesDAO              = new UBIEsocialEventosStageDAO();
 		List<UBIEsocialEventosStage> listaUbiEventosStage = new ArrayList<UBIEsocialEventosStage>();
-		UBIEsocialEventosStageLog    ubel                 = new UBIEsocialEventosStageLog();
+		UBIEventosEsStageLog    ubel                 = new UBIEventosEsStageLog();
 		
 		listaUbiEventosStage = ubesDAO.listUBIEsocialEventosStage();
 				
@@ -49,7 +49,7 @@ public class ProcessarEventosStage {
 				ubel.setStatus(StatusEsocialEventosStageEnum.ASSINADO_COM_SUCESSO);
 				ubel.setNumErro(0L);
 				
-				UBIEsocialEventosStageLogDAO ubelDAO = new UBIEsocialEventosStageLogDAO();				
+				UBIEventosEsStageLogDAO ubelDAO = new UBIEventosEsStageLogDAO();				
 				ubelDAO.insert(ubel);
 				ubelDAO.closeConnection();
 				
@@ -85,8 +85,8 @@ public class ProcessarEventosStage {
 		
 		// Grava na tabela UBI_EVENTOS_ESOCIAL_STAGE_LOGS a string com a mensagem de
 		// erro completa				
-		UBIEsocialEventosStageLogDAO ubelDAO = new UBIEsocialEventosStageLogDAO();
-		UBIEsocialEventosStageLog    ubel    = new UBIEsocialEventosStageLog();
+		UBIEventosEsStageLogDAO ubelDAO = new UBIEventosEsStageLogDAO();
+		UBIEventosEsStageLog    ubel    = new UBIEventosEsStageLog();
 		
 		ubel.setUbesDtMov(pUbesRow.getDtMov());
 		ubel.setDtMov(new Timestamp(System.currentTimeMillis()));
