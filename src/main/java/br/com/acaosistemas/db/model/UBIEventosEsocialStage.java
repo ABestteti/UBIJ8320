@@ -6,11 +6,11 @@ import br.com.acaosistemas.db.enumeration.SimNaoEnum;
 import br.com.acaosistemas.db.enumeration.StatusEsocialEventosStageEnum;
 
 /**
- * Entidade representando tabela UBI_ESOCIAL_EVENTOS_STAGE
+ * Entidade representando tabela UBI_EVENTOS_ESOCIAL_STAGE
  *
  * @author Anderson Bestteti Santos
  */
-public class UBIEsocialEventosStage {
+public class UBIEventosEsocialStage {
 	
     private Timestamp  dtMov;
     private SimNaoEnum xmlAssinado;

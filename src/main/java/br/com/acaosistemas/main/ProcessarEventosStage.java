@@ -7,10 +7,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.acaosistemas.db.dao.UBIEsocialEventosStageDAO;
+import br.com.acaosistemas.db.dao.UBIEventosEsocialStageDAO;
 import br.com.acaosistemas.db.dao.UBIEventosEsStageLogDAO;
 import br.com.acaosistemas.db.enumeration.StatusEsocialEventosStageEnum;
-import br.com.acaosistemas.db.model.UBIEsocialEventosStage;
+import br.com.acaosistemas.db.model.UBIEventosEsocialStage;
 import br.com.acaosistemas.db.model.UBIEventosEsStageLog;
 import br.com.acaosistemas.frw.util.ExceptionUtils;
 import br.com.acaosistemas.wsclientes.ClienteWSAssinarEvento;
@@ -22,15 +22,15 @@ public class ProcessarEventosStage {
 
 	public void lerRegistrosNaoProcessados() {
 		ClienteWSAssinarEvento       clientWS             = new ClienteWSAssinarEvento();
-		UBIEsocialEventosStageDAO    ubesDAO              = new UBIEsocialEventosStageDAO();
-		List<UBIEsocialEventosStage> listaUbiEventosStage = new ArrayList<UBIEsocialEventosStage>();
+		UBIEventosEsocialStageDAO    ubesDAO              = new UBIEventosEsocialStageDAO();
+		List<UBIEventosEsocialStage> listaUbiEventosStage = new ArrayList<UBIEventosEsocialStage>();
 		UBIEventosEsStageLog    ubel                 = new UBIEventosEsStageLog();
 		
 		listaUbiEventosStage = ubesDAO.listUBIEsocialEventosStage();
 				
 		System.out.println("   Processando registros da UBI_ESOCIAL_EVENTOS_STAGE...");
 		
-		for (UBIEsocialEventosStage ubesRow : listaUbiEventosStage) {
+		for (UBIEventosEsocialStage ubesRow : listaUbiEventosStage) {
 			
 			System.out.println("     Processando rowId: "+ubesRow.getRowId());
 				
@@ -78,8 +78,8 @@ public class ProcessarEventosStage {
 		System.out.println("   Finalizado processomento da UBI_ESOCIAL_EVENTOS_STAGE.");
 	}
 	
-	private void gravaExcecaoLog(UBIEsocialEventosStage pUbesRow, Exception pException) {
-		UBIEsocialEventosStageDAO ubpxDAO = new UBIEsocialEventosStageDAO();
+	private void gravaExcecaoLog(UBIEventosEsocialStage pUbesRow, Exception pException) {
+		UBIEventosEsocialStageDAO ubpxDAO = new UBIEventosEsocialStageDAO();
 		
 		ubpxDAO.updateStatus(pUbesRow);
 		

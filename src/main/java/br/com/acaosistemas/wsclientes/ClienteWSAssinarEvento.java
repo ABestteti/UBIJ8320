@@ -7,7 +7,7 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 
 import br.com.acaosistemas.db.dao.UBIRuntimesDAO;
-import br.com.acaosistemas.db.model.UBIEsocialEventosStage;
+import br.com.acaosistemas.db.model.UBIEventosEsocialStage;
 import br.com.acaosistemas.frw.util.ExceptionUtils;
 import br.com.acaosistemas.frw.util.HttpUtils;
 
@@ -26,7 +26,7 @@ public class ClienteWSAssinarEvento {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public void execWebService(UBIEsocialEventosStage pUbesRow) throws MalformedURLException, IOException {
+	public void execWebService(UBIEventosEsocialStage pUbesRow) throws MalformedURLException, IOException {
 		String parametros = new String();
 		String wsEndPoint;
 		

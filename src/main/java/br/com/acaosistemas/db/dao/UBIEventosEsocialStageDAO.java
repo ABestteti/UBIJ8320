@@ -10,14 +10,14 @@ import java.util.List;
 import br.com.acaosistemas.db.connection.ConnectionFactory;
 import br.com.acaosistemas.db.enumeration.SimNaoEnum;
 import br.com.acaosistemas.db.enumeration.StatusEsocialEventosStageEnum;
-import br.com.acaosistemas.db.model.UBIEsocialEventosStage;
+import br.com.acaosistemas.db.model.UBIEventosEsocialStage;
 
-public class UBIEsocialEventosStageDAO {
+public class UBIEventosEsocialStageDAO {
 
 	private Connection             conn;
-	private UBIEsocialEventosStage ubes;
+	private UBIEventosEsocialStage ubes;
 	
-	public UBIEsocialEventosStageDAO() {
+	public UBIEventosEsocialStageDAO() {
 		conn = new ConnectionFactory().getConnection();
 	}
 
@@ -30,8 +30,8 @@ public class UBIEsocialEventosStageDAO {
 		}
 	}
 	
-	public UBIEsocialEventosStage getUBIEsocialEventosStage(String pRowID) {
-		ubes = new UBIEsocialEventosStage();
+	public UBIEventosEsocialStage getUBIEsocialEventosStage(String pRowID) {
+		ubes = new UBIEventosEsocialStage();
 		
 		PreparedStatement stmt = null;
 		
@@ -53,9 +53,9 @@ public class UBIEsocialEventosStageDAO {
 		return ubes;
 	}
 	
-	public List<UBIEsocialEventosStage> listUBIEsocialEventosStage() {
+	public List<UBIEventosEsocialStage> listUBIEsocialEventosStage() {
 		PreparedStatement stmt             = null;
-		List<UBIEsocialEventosStage> listaUBIEsocialEventosStage = new ArrayList<UBIEsocialEventosStage>();
+		List<UBIEventosEsocialStage> listaUBIEsocialEventosStage = new ArrayList<UBIEventosEsocialStage>();
 	
 		try {
 			stmt = conn.prepareStatement(
@@ -66,7 +66,7 @@ public class UBIEsocialEventosStageDAO {
 			ResultSet rs = stmt.executeQuery();
 			
 			while (rs.next()) {
-				UBIEsocialEventosStage ubes = new UBIEsocialEventosStage();
+				UBIEventosEsocialStage ubes = new UBIEventosEsocialStage();
 				
 				ubes.setRowId(rs.getString("rowId"));
 				ubes.setDtMov(rs.getTimestamp("dt_mov"));
@@ -82,7 +82,7 @@ public class UBIEsocialEventosStageDAO {
 		return listaUBIEsocialEventosStage;
 	}
 	
-	public void updateStatus(UBIEsocialEventosStage pUbesRow) {
+	public void updateStatus(UBIEventosEsocialStage pUbesRow) {
 		PreparedStatement stmt = null;
 		
 		try {
