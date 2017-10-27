@@ -28,7 +28,7 @@ public class ProcessarEventosStage {
 		
 		listaUbiEventosStage = ubesDAO.listUBIEsocialEventosStage();
 				
-		System.out.println("   Processando registros da UBI_ESOCIAL_EVENTOS_STAGE...");
+		System.out.println("   Processando registros da UBI_EVENTOS_ESOCIAL_STAGE...");
 		
 		for (UBIEventosEsocialStage ubesRow : listaUbiEventosStage) {
 			
