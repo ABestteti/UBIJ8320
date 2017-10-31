@@ -18,7 +18,7 @@ import br.com.acaosistemas.frw.util.HttpUtils;
  */
 
 public class ClienteWSAssinarEvento {
-
+	
 	/**
 	 * Construtor default da classe
 	 */
@@ -74,7 +74,7 @@ public class ClienteWSAssinarEvento {
 			}
 			else {
 				System.out.println("HTTP code .....: " + request.getResponseMessage());
-				System.err.println("Message from ws: " + HttpUtils.readResponse(request) + " [" + wsEndPoint + "]");
+				System.out.println("Message from ws: " + HttpUtils.readResponse(request) + " [" + wsEndPoint + "]");
 			}
 						
 		} catch (MalformedURLException e) {

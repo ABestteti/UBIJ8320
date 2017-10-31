@@ -68,7 +68,7 @@ public class Daemon {
 		int    pipeStatus = -1;
 		
 		// Controla o loop de leitura do PIPE
-		boolean stopDeamon = false;
+		boolean stopDaemon = false;
 		
 		// Objects de acesso as tabelas do banco de dados
 		UBIRuntimesDAO runtimeDAO = new UBIRuntimesDAO();
@@ -80,12 +80,12 @@ public class Daemon {
 		// banco de dados.
 		conn = new ConnectionFactory().getConnection();
 		
-		System.out.println("Processando registros da área de stage...");
+		System.out.println("Processando registros da ï¿½rea de stage...");
 		
 		// Loop para leitura constante do pipe de comunicacao
 		// do deamon e por procura de registros com status 0 (nao processado)
 		// na tabela UBI_POBOX_XML
-		while (!stopDeamon) {
+		while (!stopDaemon) {
 			
 			// Pausa a execucao da thread principal por 5 segundos
 			// Com iso, e liberado o lock da dbms_pipe, permitindo que a 
@@ -161,7 +161,7 @@ public class Daemon {
 			     	break;	
 				case STOP_DAEMON:
 					System.out.println("Recebido comando stop do servico!");
-					stopDeamon = true;
+					stopDaemon = true;
 					break;
 				}
 			}
@@ -174,9 +174,11 @@ public class Daemon {
 				throw new RuntimeException(e) ;
 			}
 			
-			// Inicia o processo de leitura dos registros da tabela de stage
-			// cujo status seja A_ASSINAR (201)
-			new ProcessarEventosStage().lerRegistrosNaoProcessados();
+			if (!stopDaemon) {
+				// Inicia o processo de leitura dos registros da tabela de stage
+				// cujo status seja A_ASSINAR (201)
+				new ProcessarEventosStage().lerRegistrosNaoProcessados();
+			}
 		}
 		
 		try {
