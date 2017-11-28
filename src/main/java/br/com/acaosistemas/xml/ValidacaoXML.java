@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Vector;
@@ -18,6 +19,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 
+import br.com.acaosistemas.db.connection.ConnectionFactory;
 import oracle.jdbc.OracleDriver;
 import oracle.jdbc.driver.OracleConnection;
 import oracle.sql.ARRAY;
@@ -40,7 +42,7 @@ import oracle.sql.StructDescriptor;
  * @author Marcelo Leite
  * 
  */
-public class UBIJ8310 {
+public class ValidacaoXML {
 
 	/**
 	 * Quantidade mínima de argumentos necessários para executar o programa.
@@ -75,32 +77,6 @@ public class UBIJ8310 {
 	 * Versão da classe.
 	 */
 	private static final String VERSAO = "27.07.2017";
-
-	/**
-	 * Conexão com o banco de dados Oracle.
-	 */
-	private OracleConnection oracleConnection;
-
-	/**
-	 * Retorna uma conexão com o banco de dados.
-	 * 
-	 */
-	private OracleConnection getOracleConnection() {
-		/* Se ainda não há uma conexão com o banco definida. */
-		if (oracleConnection == null) {
-
-			/* Tenta obter a conexão padrão com o banco */
-			OracleDriver oracleDriver = new OracleDriver();
-			try {
-				oracleConnection = (OracleConnection) oracleDriver.defaultConnection();
-				return oracleConnection;
-			} catch (SQLException sqlException) {
-				throw new RuntimeException("Erro ao obter a conexão default do oracle driver.");
-			}
-		} else {
-			return oracleConnection;
-		}
-	}
 
 	/**
 	 * Valida um documento XML de acordo com os XML schemas informados.
@@ -155,37 +131,6 @@ public class UBIJ8310 {
 	}
 
 	/**
-	 * Abre uma conexão com o banco de dados Oracle.
-	 * 
-	 * @param usuario
-	 *            Usuário do banco de dados.
-	 * @param senha
-	 *            Senha do banco de dados.
-	 * @param endereco
-	 *            Endereço de acesso ao banco de dados.
-	 */
-	private final void conectarNoBanco(String usuario, String senha, String endereco) {
-
-		try {
-			Class.forName(CLASSE_DRIVER_ORACLE);
-		} catch (ClassNotFoundException classNotFoundException) {
-			throw new RuntimeException("Não foi possível encontrar a classe \"" + CLASSE_DRIVER_ORACLE + "\".",
-					classNotFoundException);
-		}
-
-		/*
-		 * Abre uma conexão com o banco de dados através das informações
-		 * fornecidas.
-		 */
-		try {
-			String urlDoBanco = "jdbc:oracle:thin:@" + endereco;
-			oracleConnection = (OracleConnection) DriverManager.getConnection(urlDoBanco, usuario, senha);
-		} catch (SQLException sqlException) {
-			throw new RuntimeException("Erro ao conectar no banco de dados.", sqlException);
-		}
-	}
-
-	/**
 	 * Cria uma estrutura de dados reconhecido pelo banco de dados Oracle
 	 * contendo as informações do array de mensagens de validação.
 	 * 
@@ -197,12 +142,19 @@ public class UBIJ8310 {
 	 */
 	private final ARRAY criarArrayDeMensagensDeValidacao(MensagemDeValidacao[] mensagensDeValidacao) {
 
-		Vector<STRUCT> vetorMensagensDeValidacao = new Vector<STRUCT>();
+		Connection conn = new ConnectionFactory().getConnection();
+		Vector<STRUCT>     vetorMensagensDeValidacao = new Vector<STRUCT>();
 
+		
 		StructDescriptor structDescriptor;
 		try {
-			structDescriptor = new StructDescriptor(T_MENSAGEM_DE_VALIDACAO_REC, getOracleConnection());
+			structDescriptor = new StructDescriptor(T_MENSAGEM_DE_VALIDACAO_REC, conn);
 		} catch (SQLException sqlException) {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 			throw new RuntimeException(
 					"Erro ao criar o struct descriptor para o tipo \"" + T_MENSAGEM_DE_VALIDACAO_REC + "\".",
 					sqlException);
@@ -216,17 +168,26 @@ public class UBIJ8310 {
 
 			try {
 				vetorMensagensDeValidacao.addElement(
-						new STRUCT(structDescriptor, getOracleConnection(), vetorMensagemDeValidacao.toArray()));
+						new STRUCT(structDescriptor, conn, vetorMensagemDeValidacao.toArray()));
 			} catch (SQLException sqlException) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 				throw new RuntimeException("Erro ao inserir uma mensagem de validação no vetor.");
 			}
 		}
 
 		ArrayDescriptor arrayDescriptorMensagensDeValidacaoTab;
 		try {
-			arrayDescriptorMensagensDeValidacaoTab = ArrayDescriptor.createDescriptor(T_MENSAGENS_DE_VALIDACAO_TAB,
-					getOracleConnection());
+			arrayDescriptorMensagensDeValidacaoTab = ArrayDescriptor.createDescriptor(T_MENSAGENS_DE_VALIDACAO_TAB, conn);
 		} catch (SQLException sqlException) {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 			throw new RuntimeException(
 					"Erro ao criar o struct descriptor para o tipo \"" + T_MENSAGENS_DE_VALIDACAO_TAB + "\".",
 					sqlException);
@@ -234,9 +195,14 @@ public class UBIJ8310 {
 
 		ARRAY arrayMensagensDeValidacao = null;
 		try {
-			arrayMensagensDeValidacao = new ARRAY(arrayDescriptorMensagensDeValidacaoTab, getOracleConnection(),
+			arrayMensagensDeValidacao = new ARRAY(arrayDescriptorMensagensDeValidacaoTab, conn,
 					vetorMensagensDeValidacao.toArray());
 		} catch (SQLException sqlException) {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 			throw new RuntimeException("Erro ao criar o array de mensagens de validação.", sqlException);
 		}
 		return arrayMensagensDeValidacao;
@@ -251,12 +217,13 @@ public class UBIJ8310 {
 	 * @return Um elemento CLOB com o conteúdo do arquivo.
 	 */
 	private CLOB criarClobDoArquivo(String caminhoDoArquivo) {
+		Connection conn = new ConnectionFactory().getConnection();
 		char[] buffer = new char[1024];
 		int totalLido;
 
 		oracle.sql.CLOB clob;
 		try {
-			clob = CLOB.createTemporary(getOracleConnection(), false, CLOB.DURATION_SESSION);
+			clob = CLOB.createTemporary(conn, false, CLOB.DURATION_SESSION);
 			clob.open(CLOB.MODE_READWRITE);
 			Writer clobWriter = clob.setCharacterStream(1);
 
@@ -271,9 +238,19 @@ public class UBIJ8310 {
 			clob.close();
 
 		} catch (SQLException sqlException) {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 			throw new RuntimeException("Erro ao criar o elemento CLOB para o arquivo \"" + caminhoDoArquivo + "\".",
 					sqlException);
 		} catch (IOException ioException) {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 			throw new RuntimeException("Erro ao criar o elemento CLOB para o arquivo \"" + caminhoDoArquivo + "\".",
 					ioException);
 		}
@@ -331,19 +308,6 @@ public class UBIJ8310 {
 		Validator validador = schema.newValidator();
 
 		return validador;
-	}
-
-	/**
-	 * Desconecta do banco de dados.
-	 */
-	private final void desconectarDoBanco() {
-		if (oracleConnection != null) {
-			try {
-				oracleConnection.close();
-			} catch (SQLException sqlException) {
-				throw new RuntimeException("Erro ao desconectar do banco.", sqlException);
-			}
-		}
 	}
 
 	/**
@@ -415,6 +379,8 @@ public class UBIJ8310 {
 	 */
 	private final MensagemDeValidacao[] validarDocumento(String caminhoArquivoXml, String[] caminhosArquivosXsd) {
 
+		Connection conn = new ConnectionFactory().getConnection();
+		
 		/* Cria os CLOBs dos arquivos XSD. */
 		CLOB[] clobsDocumentosXsd = new CLOB[caminhosArquivosXsd.length];
 		for (int contador = 0; contador < caminhosArquivosXsd.length; contador++) {
@@ -428,8 +394,13 @@ public class UBIJ8310 {
 		 */
 		ArrayDescriptor arrayDescriptorDocumentosXsd;
 		try {
-			arrayDescriptorDocumentosXsd = ArrayDescriptor.createDescriptor(T_DOCUMENTOS_XSD_TAB, oracleConnection);
+			arrayDescriptorDocumentosXsd = ArrayDescriptor.createDescriptor(T_DOCUMENTOS_XSD_TAB, conn);
 		} catch (SQLException sqlException) {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 			throw new RuntimeException("Erro ao criar o descritor para o tipo \"" + T_DOCUMENTOS_XSD_TAB + "\".",
 					sqlException);
 		}
@@ -437,8 +408,13 @@ public class UBIJ8310 {
 		/* Cria o elemento Oracle que armazena os CLOBs dos arquivos XSD. */
 		ARRAY arrayDocumentosXsd;
 		try {
-			arrayDocumentosXsd = new ARRAY(arrayDescriptorDocumentosXsd, oracleConnection, clobsDocumentosXsd);
+			arrayDocumentosXsd = new ARRAY(arrayDescriptorDocumentosXsd, conn, clobsDocumentosXsd);
 		} catch (SQLException sqlException) {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 			throw new RuntimeException("Erro ao criar o array para armazenar os documentos XSD.", sqlException);
 		}
 
@@ -462,7 +438,7 @@ public class UBIJ8310 {
 
 	public static ARRAY validarDocumentoXml(CLOB documentoXML, ARRAY arrayDocumentosXSD) {
 
-		UBIJ8310 ubij8050 = new UBIJ8310();
+		ValidacaoXML ubij8050 = new ValidacaoXML();
 
 		ARRAY arrayMensagensDeValidacao = ubij8050.validarDocumento(documentoXML, arrayDocumentosXSD);
 
@@ -493,7 +469,6 @@ public class UBIJ8310 {
 		String[] caminhosArquivosXsd = null;
 
 		if (args.length < QUANTIDADE_MINIMA_DE_ARGUMENTOS) {
-			System.err.println(obterUtilizacaoDoPrograma());
 			System.exit(1);
 		} else {
 			usuario = args[0];
@@ -508,15 +483,11 @@ public class UBIJ8310 {
 			}
 		}
 
-		System.out.println(UBIJ8310.class.getSimpleName() + " - Versão: " + getVersao());
+		System.out.println(ValidacaoXML.class.getSimpleName() + " - Versão: " + getVersao());
 
-		UBIJ8310 ubij8050 = new UBIJ8310();
-
-		ubij8050.conectarNoBanco(usuario, senha, endereco);
+		ValidacaoXML ubij8050 = new ValidacaoXML();
 
 		MensagemDeValidacao[] mensagensDeValidacao = ubij8050.validarDocumento(caminhoArquivoXml, caminhosArquivosXsd);
-
-		ubij8050.desconectarDoBanco();
 
 		if (mensagensDeValidacao.length > 0) {
 			StringBuffer stringBuffer = new StringBuffer();
@@ -530,28 +501,6 @@ public class UBIJ8310 {
 		} else {
 			System.out.println("Nenhum erro encontrado no arquivo \"" + caminhoArquivoXml + "\".");
 		}
-	}
-
-	/**
-	 * Retorna a mensagem de utilização do programa.
-	 * 
-	 * @return A mensagem de utilização do programa.
-	 */
-	private static final String obterUtilizacaoDoPrograma() {
-		StringBuffer stringBuffer = new StringBuffer();
-
-		stringBuffer.append("UBIJ8050 - Validador de arquivos XML versão " + getVersao() + ".\n\n");
-		stringBuffer.append("Utilização do programa:\n");
-		stringBuffer.append(UBIJ8310.class.getSimpleName()
-				+ " {usuario} {senha} {enderecoDoBanco} {arquivoXML} {arquivosXSD...}\n\n");
-		stringBuffer.append("Onde:\n");
-		stringBuffer.append("\tusuario         - Nome do usuário no banco de dados.\n");
-		stringBuffer.append("\tsenha           - Senha do usuário.\n");
-		stringBuffer.append("\tenderecoDoBanco - Endereço de conexão com o banco de dados.\n");
-		stringBuffer.append("\tarquivoXML      - Caminho para o arquivo XML a ser validado.\n");
-		stringBuffer.append("\tarquivosXSD     - Caminho para os arquivos XSDs com os quais o XML será validado.\n");
-
-		return stringBuffer.toString();
 	}
 
 }
