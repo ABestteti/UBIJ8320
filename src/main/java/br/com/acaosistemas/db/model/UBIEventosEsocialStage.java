@@ -15,6 +15,8 @@ public class UBIEventosEsocialStage {
     private Timestamp  dtMov;
     private SimNaoEnum xmlAssinado;
     private StatusEsocialEventosStageEnum status;
+    private StringBuffer xmlRetornoValidacao;
+    private StringBuffer xml;
     private String rowId;
     
 	public Timestamp getDtMov() {
@@ -33,19 +35,35 @@ public class UBIEventosEsocialStage {
 		this.xmlAssinado = xmlAssinado;
 	}
 
-	public String getRowId() {
-		return rowId;
-	}
-
-	public void setRowId(String rowId) {
-		this.rowId = rowId;
-	}
-
 	public StatusEsocialEventosStageEnum getStatus() {
 		return status;
 	}
 
 	public void setStatus(StatusEsocialEventosStageEnum status) {
 		this.status = status;
+	}
+
+	public StringBuffer getXmlRetornoValidacao() {
+		return xmlRetornoValidacao;
+	}
+
+	public void setXmlRetornoValidacao(StringBuffer xmlRetornoValidacao) {
+		this.xmlRetornoValidacao = xmlRetornoValidacao;
+	}
+
+	public StringBuffer getXml() {
+		return xml;
+	}
+
+	public void setXml(StringBuffer xml) {
+		this.xml = xml;
+	}
+	
+	public String getRowId() {
+		return rowId;
+	}
+
+	public void setRowId(String rowId) {
+		this.rowId = rowId;
 	}
 }

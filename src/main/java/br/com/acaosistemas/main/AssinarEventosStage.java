@@ -15,18 +15,26 @@ import br.com.acaosistemas.db.model.UBIEventosEsStageLog;
 import br.com.acaosistemas.frw.util.ExceptionUtils;
 import br.com.acaosistemas.wsclientes.ClienteWSAssinarEvento;
 
-public class ProcessarEventosStage {
+/**
+ * Classe responsavel por porcessar todos os eventos da tabela UBI_EVENTOS_ESOCIAL_STAGE que
+ * estejam com status "A ASSINAR".
+ * 
+ * @author Anderson Bestteti Santos
+ *
+ */
+public class AssinarEventosStage {
 
-	public ProcessarEventosStage() {
-	}
-
-	public void lerRegistrosNaoProcessados() {
+	/**
+	 * Recupera todos os registros tabela UBI_EVENTOS_ESOCIAL_STAGE cujo status seja
+	 * igual a "A ASSINAR"
+	 */
+	public void lerRegistrosNaoAssinados() {
 		ClienteWSAssinarEvento       clientWS             = new ClienteWSAssinarEvento();
 		UBIEventosEsocialStageDAO    ubesDAO              = new UBIEventosEsocialStageDAO();
 		List<UBIEventosEsocialStage> listaUbiEventosStage = new ArrayList<UBIEventosEsocialStage>();
-		UBIEventosEsStageLog    ubel                 = new UBIEventosEsStageLog();
+		UBIEventosEsStageLog    ubel                      = new UBIEventosEsStageLog();
 		
-		listaUbiEventosStage = ubesDAO.listUBIEsocialEventosStage();
+		listaUbiEventosStage = ubesDAO.listUBIEsocialEventosStage(StatusEsocialEventosStageEnum.A_ASSINAR);
 				
 		System.out.println("   Processando registros da UBI_EVENTOS_ESOCIAL_STAGE...");
 		
@@ -58,47 +66,23 @@ public class ProcessarEventosStage {
 				// MalformedURLException, faz a atualizacao do status com o
 		        // valor apropriado.
 				ubesRow.setStatus(StatusEsocialEventosStageEnum.ERRO_ASSINATURA_IRRECUPERAVEL);
-				gravaExcecaoLog(ubesRow, e);
+				ExceptionUtils.gravaExcecaoLog(ubesRow, e);
 			} catch (SocketTimeoutException e) {
 				// Caso a chamada do web service do correio retornar a excecao
 				// IOException, faz a atualizacao do status com o
 		        // valor apropriado
 				ubesRow.setStatus(StatusEsocialEventosStageEnum.ERRO_ASSINATURA_IRRECUPERAVEL);
-				gravaExcecaoLog(ubesRow, e);
+				ExceptionUtils.gravaExcecaoLog(ubesRow, e);
 			} catch (IOException e) {
 				// Caso a chamada do web service do correio retornar a excecao
 				// IOException, faz a atualizacao do status com o
 		        // valor apropriado
 				ubesRow.setStatus(StatusEsocialEventosStageEnum.ERRO_ASSINATURA_IRRECUPERAVEL);
-				gravaExcecaoLog(ubesRow, e);
+				ExceptionUtils.gravaExcecaoLog(ubesRow, e);
 			}
 		}
 		
 		ubesDAO.closeConnection();
 		System.out.println("   Finalizado processomento da UBI_EVENTOS_ESOCIAL_STAGE.");
-	}
-	
-	private void gravaExcecaoLog(UBIEventosEsocialStage pUbesRow, Exception pException) {
-		UBIEventosEsocialStageDAO ubpxDAO = new UBIEventosEsocialStageDAO();
-		
-		ubpxDAO.updateStatus(pUbesRow);
-		
-		// Grava na tabela UBI_EVENTOS_ESOCIAL_STAGE_LOGS a string com a mensagem de
-		// erro completa				
-		UBIEventosEsStageLogDAO ubelDAO = new UBIEventosEsStageLogDAO();
-		UBIEventosEsStageLog    ubel    = new UBIEventosEsStageLog();
-		
-		ubel.setUbesDtMov(pUbesRow.getDtMov());
-		ubel.setDtMov(new Timestamp(System.currentTimeMillis()));
-		ubel.setStatus(pUbesRow.getStatus());
-		ubel.setMensagem(pUbesRow.getStatus().getDescricao() +
-				        "\n"                                 +
-				        pException.getMessage()              +
-				        "\n"                                 +
-				        ExceptionUtils.stringStackTrace(pException));
-		ubel.setNumErro(new Long(pUbesRow.getStatus().getId()));
-		
-		ubelDAO.insert(ubel);
-		ubelDAO.closeConnection();		
 	}
 }

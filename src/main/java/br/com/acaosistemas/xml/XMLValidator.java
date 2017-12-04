@@ -23,10 +23,13 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 
+import br.com.acaosistemas.main.Versao;
+
 /**
  * Classe responsavel por oferecer o servico de validacao de um XML contra o seu
  * respectivo XSD.
  * 
+ * @author Marcelo Leite
  * @author Anderson Bestteti Santos
  *
  */
@@ -49,7 +52,7 @@ public class XMLValidator {
 			OcorrenciaValidacao occ = new OcorrenciaValidacao();
 			occ.setCodigo(999);
 			occ.setDescricao(
-					"UBIJ8320\n" +
+					Versao.getStringVersao() +
 					getMensagensDeValidacao()[i].getLinha() +
 					"; " +
 					getMensagensDeValidacao()[i].getColuna() +
@@ -64,7 +67,7 @@ public class XMLValidator {
 		// Inicia a construcao do XML propriamente dito
 		try {
 			// Constroe o XML com base na hierarquia dos classes OcorrenciasValidacao e
-		    // OcorrenciaValidacao. Para tanto, cria um constexto JAXB para criar o XML
+		    // OcorrenciaValidacao. Para tanto, cria um contexto JAXB para criar o XML
 			// onde o nodo raiz do XML e determinado pela classe OcorrenciasValidacao.class
 			JAXBContext context = JAXBContext.newInstance(OcorrenciasValidacao.class);
 			
@@ -131,76 +134,31 @@ public class XMLValidator {
 		
         // Popula o array de streamSources com os XSDs necessarios para
 		// validar um XML.
-		int contador = 0;
+		int cont = 0;
 		for (StringBuffer xsd : pXSDs) {
-			streamSourceXSD[contador++] = new StreamSource(new StringReader(xsd.toString()));
+			streamSourceXSD[cont++] = new StreamSource(new StringReader(xsd.toString()));
 		}
 		
 		try {
 			schemaXSD = factoryXSD.newSchema(streamSourceXSD);
-			
 			Validator validatorXML = schemaXSD.newValidator();
 			
 			validatorXML.setErrorHandler(errorHandlerValidacaoXml);
-
 			Source sourceXML = new StreamSource(new StringReader(pXml.toString()));
 
 			try {
 				validatorXML.validate(sourceXML);
 				
 				// Armazena as mensagens de validacao do XML para uso posterios
-				setMensagensDeValidacao(errorHandlerValidacaoXml.getMensagensDeValidacao());
+				setMensagensDeValidacao(errorHandlerValidacaoXml.getMensagensDeValidacao());	
 				
-				// Se foram gerados erros de validacao, entao apresenta o resultado obtido
-/*				if (errorHandlerValidacaoXml.getMensagensDeValidacao().length > 0) {
-					MensagemDeValidacao[] mensagensDeValidacao = errorHandlerValidacaoXml.getMensagensDeValidacao();
-					for (int i = 0; i < mensagensDeValidacao.length; i++) {
-						System.out.println("Linha...: [" + i + "] " + mensagensDeValidacao[i].getLinha());
-						System.out.println("Coluna..: [" + i + "] " + mensagensDeValidacao[i].getColuna());
-						System.out.println("Mensagem: [" + i + "] " + mensagensDeValidacao[i].getMensagem());
-						System.out.println("========================================================");
-					}
-				}*/
 			} catch (SAXException ex) {
 				System.out.println(ex.getMessage());
-				/* Obtém as mensagens de erro geradas pelo validador. */
 			} catch (IOException ex) {
 				System.out.println(ex.getMessage());
 			}
 		} catch (SAXException ex) {
 			System.out.println(ex.getMessage());
 		}	
-	}
-
-
-	
-	public static void main(String[] args) {
-		StringBuffer vXml;
-		ArrayList<StringBuffer> vXSDs = new ArrayList<StringBuffer>();
-		
-		try {
-			vXml = new StringBuffer(
-					new Scanner(new File("files/ID1001956380001252017072614095503085.xml")).useDelimiter("\\A").next());
-			
-			vXSDs.add(new StringBuffer(new Scanner(new File("files/xmldsig-core-schema.xsd")).useDelimiter("\\A").next()));
-			vXSDs.add(new StringBuffer(new Scanner(new File("files/evtInfoEmpregador.xsd")).useDelimiter("\\A").next()));
-
-			XMLValidator vValidator = new XMLValidator();
-			vValidator.validateXML(vXml, vXSDs);
-			
-			StringBuffer testSb = vValidator.getMensagensXmlFormat();
-			
-			if (vValidator.hasErros()) {
-				System.out.println("XML com erros");
-			}
-			else {
-				System.out.println("XML sem erros");
-			}
-
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 	}
 }

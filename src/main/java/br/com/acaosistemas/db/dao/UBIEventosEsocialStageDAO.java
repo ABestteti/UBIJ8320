@@ -25,7 +25,6 @@ public class UBIEventosEsocialStageDAO {
 		try {
 			conn.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			throw new RuntimeException(e);
 		}
 	}
@@ -53,15 +52,15 @@ public class UBIEventosEsocialStageDAO {
 		return ubes;
 	}
 	
-	public List<UBIEventosEsocialStage> listUBIEsocialEventosStage() {
-		PreparedStatement stmt             = null;
+	public List<UBIEventosEsocialStage> listUBIEsocialEventosStage(StatusEsocialEventosStageEnum pStatus) {
+		PreparedStatement stmt                                   = null;
 		List<UBIEventosEsocialStage> listaUBIEsocialEventosStage = new ArrayList<UBIEventosEsocialStage>();
 	
 		try {
 			stmt = conn.prepareStatement(
 					"SELECT ubes.dt_mov, ubes.status, ubes.xml_assinado, ubes.rowid FROM ubi_eventos_esocial_stage ubes WHERE ubes.status = ?");
 			
-			stmt.setInt(1, StatusEsocialEventosStageEnum.A_ASSINAR.getId());
+			stmt.setInt(1, pStatus.getId());
 			
 			ResultSet rs = stmt.executeQuery();
 			

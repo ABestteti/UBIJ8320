@@ -6,19 +6,42 @@ public enum StatusEsocialEventosStageEnum implements BaseEnum<Integer> {
 	/**
      * Indica que o evento da stage esta pronto para ser assinado.
      */
-    A_ASSINAR(201, "A assinar"),
+    A_ASSINAR(101, "A assinar"),
  
     /**
      * Indica que o evento da stage foi assinado com sucesso pelo web service
      * de assinatura de evento.
      */
-    ASSINADO_COM_SUCESSO(298, "Evento da stage foi assinado com sucesso"),
+    ASSINADO_COM_SUCESSO(198, "Evento da stage foi assinado com sucesso"),
     
     /**
      * Indica que houve um erro na assinatura do evento da stage pelo web service
      * de assinatura de evento.
      */
-    ERRO_ASSINATURA_IRRECUPERAVEL(299, "Erro na assinatura do evento da stage - irrecuperável");
+    ERRO_ASSINATURA_IRRECUPERAVEL(199, "Erro na assinatura do evento da stage - irrecuperável"),
+    
+    /**
+     * Indica que o XML do evento esta preparado para ser validado contra o seu 
+     * respectivo XSD.
+     */
+    A_VALIDAR(201, "A validar"),
+    
+    /**
+     * Indica que o XML do evento não passou pela validacao do seu XSD, e que
+     * foram geradas mensagens de erro.
+     */
+    ERRO_VALIDACAO(295, "Erro de validação do XML"),
+    
+    /**
+     * Indica que o XML do evento foi validado com sucesso contra o seu respectivo
+     * XSD.
+     */
+    VALIDADO_COM_SUCESSO(298, "Validado com sucesso"),
+    
+    /**
+     * Significa que houve um erro na validação do XML do evento e que ele é irrecuperável.
+     */
+    ERRO_VALIDACAO_IRRECUPERAVEL(299, "Erro na validação - irrecuperável");
 
     private Integer id;
     private String descricao;
