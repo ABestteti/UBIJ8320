@@ -1,5 +1,6 @@
 package br.com.acaosistemas.db.model;
 
+import java.sql.NClob;
 import java.sql.Timestamp;
 
 import br.com.acaosistemas.db.enumeration.SimNaoEnum;
@@ -16,7 +17,7 @@ public class UBIEventosEsocialStage {
     private SimNaoEnum xmlAssinado;
     private StatusEsocialEventosStageEnum status;
     private StringBuffer xmlRetornoValidacao;
-    private StringBuffer xml;
+    private NClob xml;
     private String rowId;
     
 	public Timestamp getDtMov() {
@@ -51,11 +52,11 @@ public class UBIEventosEsocialStage {
 		this.xmlRetornoValidacao = xmlRetornoValidacao;
 	}
 
-	public StringBuffer getXml() {
+	public NClob getXml() {
 		return xml;
 	}
 
-	public void setXml(StringBuffer xml) {
+	public void setXml(NClob xml) {
 		this.xml = xml;
 	}
 	

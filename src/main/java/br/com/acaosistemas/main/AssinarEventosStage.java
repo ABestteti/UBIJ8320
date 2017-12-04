@@ -32,11 +32,11 @@ public class AssinarEventosStage {
 		ClienteWSAssinarEvento       clientWS             = new ClienteWSAssinarEvento();
 		UBIEventosEsocialStageDAO    ubesDAO              = new UBIEventosEsocialStageDAO();
 		List<UBIEventosEsocialStage> listaUbiEventosStage = new ArrayList<UBIEventosEsocialStage>();
-		UBIEventosEsStageLog    ubel                      = new UBIEventosEsStageLog();
+		UBIEventosEsStageLog         ubel                 = new UBIEventosEsStageLog();
 		
 		listaUbiEventosStage = ubesDAO.listUBIEsocialEventosStage(StatusEsocialEventosStageEnum.A_ASSINAR);
 				
-		System.out.println("   Processando registros da UBI_EVENTOS_ESOCIAL_STAGE...");
+		System.out.println("   Assinando dos XMLs da UBI_EVENTOS_ESOCIAL_STAGE...");
 		
 		for (UBIEventosEsocialStage ubesRow : listaUbiEventosStage) {
 			
@@ -83,6 +83,6 @@ public class AssinarEventosStage {
 		}
 		
 		ubesDAO.closeConnection();
-		System.out.println("   Finalizado processomento da UBI_EVENTOS_ESOCIAL_STAGE.");
+		System.out.println("   Finalizado assinatura XMLs da UBI_EVENTOS_ESOCIAL_STAGE.");
 	}
 }
