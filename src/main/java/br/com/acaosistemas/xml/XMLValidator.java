@@ -107,7 +107,7 @@ public class XMLValidator {
 	 *            XML.
 	 * @return As mensagens retornadas pela validação do documento.
 	 */
-	public void validateXML(StringBuffer pXml, ArrayList<StringBuffer> pXSDs) {
+	public void validateXML(StringBuffer pXml, List<StringBuffer> pXSDs) {
 
 		// Cria um array de streamSource para passar como parametro para construcao do schema de
 		// validacao do XML. Esse array vai combinar todos os XSDs necessarios para validar um XML.
