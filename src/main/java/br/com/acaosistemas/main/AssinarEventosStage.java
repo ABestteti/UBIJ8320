@@ -40,7 +40,9 @@ public class AssinarEventosStage {
 		
 		for (UBIEventosEsocialStage ubesRow : listaUbiEventosStage) {
 			
+			System.out.println("     ".concat(new Timestamp(System.currentTimeMillis()).toString()));
 			System.out.println("     Processando rowId: "+ubesRow.getRowId());
+			System.out.println("     Data de movimentacao: "+ubesRow.getDtMov());
 				
 			try {
 				clientWS.execWebService(ubesRow);

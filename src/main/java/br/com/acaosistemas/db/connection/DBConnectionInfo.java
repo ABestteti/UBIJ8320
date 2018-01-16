@@ -41,6 +41,4 @@ public final class DBConnectionInfo {
 	public static void setDbStrConnect(String dbStrConnect) {
 		DBConnectionInfo.dbStrConnect = dbStrConnect;
 	}
-	
-	
 }

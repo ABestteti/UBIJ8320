@@ -102,16 +102,12 @@ public class XMLValidator {
 	 * 
 	 * @param pXml
 	 *            Caminho para o arquivo XML a ser validado.
-	 * @param pXSDs
-	 *            Caminho para os arquivos XSD utilizados para a validação do
-	 *            XML.
-	 * @return As mensagens retornadas pela validação do documento.
 	 */
-	public void validateXML(StringBuffer pXml, ArrayList<StringBuffer> pXSDs) {
-
+	public void validateXMLFromXSD(StringBuffer pXml, List<StringBuffer> pXSDList) {
+		
 		// Cria um array de streamSource para passar como parametro para construcao do schema de
 		// validacao do XML. Esse array vai combinar todos os XSDs necessarios para validar um XML.
-		StreamSource[] streamSourceXSD = new StreamSource[pXSDs.size()];
+		StreamSource[] streamSourceXSD = new StreamSource[pXSDList.size()];
 
 		SchemaFactory factoryXSD = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		Schema schemaXSD;
@@ -135,7 +131,7 @@ public class XMLValidator {
         // Popula o array de streamSources com os XSDs necessarios para
 		// validar um XML.
 		int cont = 0;
-		for (StringBuffer xsd : pXSDs) {
+		for (StringBuffer xsd : pXSDList) {
 			streamSourceXSD[cont++] = new StreamSource(new StringReader(xsd.toString()));
 		}
 		

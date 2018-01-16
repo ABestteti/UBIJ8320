@@ -13,7 +13,7 @@ public class ConnectionFactory {
 
 	        } catch (ClassNotFoundException e) {
 
-	            System.err.println("Biblioteca JDBC da Oracle não encontrada.");
+	            System.err.println("Biblioteca JDBC da Oracle nao encontrada.");
 	            throw new RuntimeException(e);
 	        }
 	        
@@ -22,7 +22,7 @@ public class ConnectionFactory {
 	            	DriverManager.setLoginTimeout(10);
 	            	
 	            	
-                 // Retorna uma conexão com o banco de dados.
+                 // Retorna uma conexo com o banco de dados.
 	         	return DriverManager.getConnection
 	         		   (
 	                    "jdbc:oracle:thin:@"+DBConnectionInfo.getDbStrConnect(), 
@@ -32,9 +32,9 @@ public class ConnectionFactory {
 
 	        } catch (SQLException e) {
 
-	            System.err.println("Erro durante a conexão com o banco de dados.");
-	            System.err.println("Revise se os parâmetros usuário, senha e string"); 
-	            System.err.println("de conexão estão corretos.");
+	            System.err.println("Erro durante a conexo com o banco de dados.");
+	            System.err.println("Revise se os parametros usuario, senha e string"); 
+	            System.err.println("de conexo estão corretos.");
 	            throw new RuntimeException(e);
 	        }
 		}
