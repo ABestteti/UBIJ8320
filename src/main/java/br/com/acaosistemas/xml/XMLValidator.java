@@ -29,6 +29,10 @@ import br.com.acaosistemas.main.Versao;
  * Classe responsavel por oferecer o servico de validacao de um XML contra o seu
  * respectivo XSD.
  * 
+ * Caso o metodo {@link #hasErros()} retorne TRUE, significa que foram encontrados 
+ * erros de validacao no XML. Nesse caso, utilize o metodo {@link #getMensagensDeValidacao()} 
+ * ou {@link #getMensagensXmlFormat()} para obter as mensagens geradas por este validador.
+ * 
  * @author Marcelo Leite
  * @author Anderson Bestteti Santos
  *
@@ -38,9 +42,11 @@ public class XMLValidator {
 	private MensagemDeValidacao[] mensagensDeValidacao;
 	
 	public XMLValidator() {
-
 	}
 	
+	/***
+	 * @return Um StringBuffer com as mensagens de validacao no formato XML.
+	 */
 	public StringBuffer getMensagensXmlFormat() {
 		
 		StringWriter writer                            = new StringWriter();
@@ -85,14 +91,28 @@ public class XMLValidator {
 		return writer.getBuffer();
 	}
 
+	/***
+	 * 
+	 * @return Um array MensagemDeValidacao com todas as mensagens geradas pelo
+	 * validador de XML.
+	 */
 	public MensagemDeValidacao[] getMensagensDeValidacao() {
 		return mensagensDeValidacao;
 	}
 
+	/***
+	 * Recebe um array do tipo {@link MensgamDeValidacao} para armazenar as mensagens
+	 * de validacao geradas pelo validador de XML.
+	 * @param mensagensDeValidacao
+	 */
 	private void setMensagensDeValidacao(MensagemDeValidacao[] mensagensDeValidacao) {
 		this.mensagensDeValidacao = mensagensDeValidacao;
 	}
 
+	/***
+	 * 
+	 * @return True se o XML tem erros de validacao. False, caso contrario.
+	 */
 	public boolean hasErros() {
 		return (getMensagensDeValidacao().length > 0) ? true : false;
 	}
@@ -101,11 +121,10 @@ public class XMLValidator {
 	 * Valida um documento XML de acordo com os XSDs informados.
 	 * 
 	 * @param pXml
-	 *            Caminho para o arquivo XML a ser validado.
+	 *            XML a ser validado.
 	 * @param pXSDs
-	 *            Caminho para os arquivos XSD utilizados para a validação do
+	 *            Lista de XSDs utilizados para a validacao do
 	 *            XML.
-	 * @return As mensagens retornadas pela validação do documento.
 	 */
 	public void validateXML(StringBuffer pXml, List<StringBuffer> pXSDs) {
 
@@ -153,12 +172,12 @@ public class XMLValidator {
 				setMensagensDeValidacao(errorHandlerValidacaoXml.getMensagensDeValidacao());	
 				
 			} catch (SAXException ex) {
-				System.out.println(ex.getMessage());
+				ex.printStackTrace();
 			} catch (IOException ex) {
-				System.out.println(ex.getMessage());
+				ex.printStackTrace();
 			}
 		} catch (SAXException ex) {
-			System.out.println(ex.getMessage());
+			ex.printStackTrace();
 		}	
 	}
 }
