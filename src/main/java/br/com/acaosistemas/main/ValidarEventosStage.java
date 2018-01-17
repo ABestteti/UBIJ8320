@@ -41,7 +41,7 @@ public class ValidarEventosStage {
 		// Inicia a montagem da lista com os XSDs que serao usados para criar o validador do
 		// XML do evento. O primeiro item da lista DEVE sempre ser o xmldsig-core-schema.xsd .
 		try {
-			File xmlDsigFile    = new File("resource/xmldsig-core-schema.xsd");
+			File xmlDsigFile    = new File("resources/xmldsig-core-schema.xsd");
 			Scanner xmlDsigScan = new Scanner(xmlDsigFile);
 			
 			xsdList.add(new StringBuffer(xmlDsigScan.useDelimiter("\\A").next()));

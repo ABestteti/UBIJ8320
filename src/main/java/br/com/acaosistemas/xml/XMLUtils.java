@@ -29,9 +29,8 @@ public final class XMLUtils {
         // Habilita a busca de namespaces no XML
         factory.setNamespaceAware(true);
         
-        try  
-        {  
-        	    // Cria um novo documento DOM
+        try {  
+        	// Cria um novo documento DOM
             builder = factory.newDocumentBuilder();
             
             // Cria a representacao DOM do XML recebido
@@ -49,5 +48,4 @@ public final class XMLUtils {
         }            
 		return xsdNameSpace;
 	}
-
 }
