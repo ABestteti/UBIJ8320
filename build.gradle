@@ -77,8 +77,9 @@ jar {
 
 // Adiciona na task distZip a inclusao do diretorio resources e o seu conteudo no arquivo ZIP e TAR
 // para distribuicao da aplicacao.
-// Referencia:
+// Referencias:
 // https://stackoverflow.com/questions/5743036/deploy-additional-files-in-gradle-application-plugin
+// http://leetschau.github.io/blog/2014/11/19/153734/
 distZip {
     into(project.name) {
         from '.'
