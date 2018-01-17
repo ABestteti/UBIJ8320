@@ -65,7 +65,7 @@ public class Daemon {
 		String pipeConteudo  = "";
 		
 		// Variaveis para trabalhar com o pipe de banco
-		String pipeName   = "";
+		String pipeName   = null;
 		int    pipeCmd    = -1;
 		int    pipeStatus = -1;
 		
@@ -78,6 +78,9 @@ public class Daemon {
 		pipeName = runtimeDAO.getRuntimeValue("PIPEUBIASSEVT");
 		runtimeDAO.closeConnection();
 		
+		if (pipeName == null) {
+			throw new RuntimeException("O runtime PIPEUBIASSEVT nao esta cadastrado no UBI.");
+		}
 		// Abre conexao com o banco para leitura do pipe do
 		// banco de dados.
 		conn = new ConnectionFactory().getConnection();
@@ -187,7 +190,7 @@ public class Daemon {
 			if (!stopDaemon) {
 				// Inicia o processo de leitura dos registros da tabela de stage
 				// cujo status seja A_ASSINAR (101)
-				//new AssinarEventosStage().lerRegistrosNaoAssinados();
+				new AssinarEventosStage().lerRegistrosNaoAssinados();
 				
 				// Inicia o processo de validacao dos registros da tabela de stage
 				// cujo status seja A_VALIDAR (201)
