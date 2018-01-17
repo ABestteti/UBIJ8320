@@ -3,16 +3,17 @@ package br.com.acaosistemas.main;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import br.com.acaosistemas.db.dao.UBIEventosEsocialStageDAO;
+import br.com.acaosistemas.db.dao.UBIXsdsDAO;
 import br.com.acaosistemas.db.enumeration.StatusEsocialEventosStageEnum;
 import br.com.acaosistemas.db.model.UBIEventosEsStageLog;
 import br.com.acaosistemas.db.model.UBIEventosEsocialStage;
-import br.com.acaosistemas.frw.util.XmlUtils;
+import br.com.acaosistemas.db.model.UBIXsds;
+import br.com.acaosistemas.xml.XMLUtils;
 import br.com.acaosistemas.xml.XMLValidator;
 
 /**
@@ -32,11 +33,14 @@ public class ValidarEventosStage {
 		UBIEventosEsocialStageDAO    ubesDAO              = new UBIEventosEsocialStageDAO();
 		List<UBIEventosEsocialStage> listaUbiEventosStage = new ArrayList<UBIEventosEsocialStage>();
 		UBIEventosEsStageLog         ubel                 = new UBIEventosEsStageLog();
-		XMLValidator                 xmlValidator         = new XMLValidator();
+		UBIXsdsDAO                   xsdsDAO              = new UBIXsdsDAO();
 		
-		// Monta lista de XSDs que serao utilizados na construcao do parses
+		XMLValidator                 xmlValidator         = new XMLValidator();
 		List<StringBuffer>           xsdList              = new ArrayList<StringBuffer>();
-
+		String                       xsdNameSpace;
+		
+		listaUbiEventosStage = ubesDAO.listUBIEsocialEventosStage(StatusEsocialEventosStageEnum.A_VALIDAR);
+				
 		// Inicia a montagem da lista com os XSDs que serao usados para criar o validador do
 		// XML do evento. O primeiro item da lista DEVE sempre ser o xmldsig-core-schema.xsd .
 		try {
@@ -44,18 +48,12 @@ public class ValidarEventosStage {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
-		listaUbiEventosStage = ubesDAO.listUBIEsocialEventosStage(StatusEsocialEventosStageEnum.A_VALIDAR);
-				
+
 		System.out.println("   Validando XMLs da UBI_EVENTOS_ESOCIAL_STAGE...");
 		
 		for (UBIEventosEsocialStage ubesRow : listaUbiEventosStage) {
-			
-			System.out.println("     ".concat(new Timestamp(System.currentTimeMillis()).toString()));
 			System.out.println("     Processando rowId: "+ubesRow.getRowId());
-			System.out.println("     Data de movimentacao: "+ubesRow.getDtMov());
-			
-			// Recupera do banco o XML do evento assinado para executar a validacao
+						
 			StringBuffer xmlEvento = new StringBuffer();
 			try {
 				xmlEvento.append(ubesRow.getXml().getSubString(1, (int) ubesRow.getXml().length()));
@@ -63,9 +61,17 @@ public class ValidarEventosStage {
 				e.printStackTrace();
 			}
 			
-			String nameSpace = XmlUtils.getXsdNameSpace(xmlEvento);
+			// Recupera o namespace que referencia o XSD do atual XML do evento do eSocial
+			// para buscar no banco o documento XSD.
+			UBIXsds xsdRow = xsdsDAO.getUBIXsds(XMLUtils.getXMLNamespace(xmlEvento));
 			
-			xmlValidator.validateXMLFromXSD(xmlEvento, xsdList);		
+			// Adiciona o XSD localzado na lista de XSDs
+			xsdList.add(new StringBuffer(xsdRow.getDocumento().toString()));
+
+			xmlValidator.validateXML(xmlEvento, xsdList);	
+			
+			// Remove o XSD do XML do evento da lista de XSDs
+			xsdList.remove(2);
 		}
-	}	
+	}
 }
