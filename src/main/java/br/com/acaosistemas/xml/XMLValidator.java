@@ -1,13 +1,10 @@
 package br.com.acaosistemas.xml;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
@@ -59,10 +56,10 @@ public class XMLValidator {
 			occ.setCodigo(999);
 			occ.setDescricao(
 					Versao.getStringVersao() +
-					getMensagensDeValidacao()[i].getLinha() +
-					"; " +
-					getMensagensDeValidacao()[i].getColuna() +
-					": " +
+					" [Linha " + getMensagensDeValidacao()[i].getLinha() +
+					";" +
+					" Coluna " + getMensagensDeValidacao()[i].getColuna() +
+					"]: " +
 					getMensagensDeValidacao()[i].getMensagem());
 			
 			ocorrenciasValidacao.add(occ);
@@ -78,9 +75,14 @@ public class XMLValidator {
 			JAXBContext context = JAXBContext.newInstance(OcorrenciasValidacao.class);
 			
 			Marshaller mmarshaller = context.createMarshaller();
-			mmarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);			
-			mmarshaller.marshal(ocorrenciaValidacaoXML, writer);
+			// A propriedade "jaxb.fragment=TRUE" evita a geracao da linha
+			// com a declaracao do XML: <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+			mmarshaller.setProperty("jaxb.fragment", Boolean.TRUE);
 			
+			// Ativa a formatacao do XML produzido.
+			mmarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			mmarshaller.marshal(ocorrenciaValidacaoXML, writer);
+
 			System.out.println("XML:\n"+writer.getBuffer().toString());
 		} catch (JAXBException e) {
 			// TODO Auto-generated catch block

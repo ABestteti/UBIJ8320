@@ -37,7 +37,6 @@ public class ValidarEventosStage {
 		XMLValidator                 xmlValidator         = new XMLValidator();
 		List<StringBuffer>           xsdList              = new ArrayList<StringBuffer>();
 		listaUbiEventosStage = ubesDAO.listUBIEsocialEventosStage(StatusEsocialEventosStageEnum.A_VALIDAR);		
-		ubesDAO.closeConnection();
 		
 		// Inicia a montagem da lista com os XSDs que serao usados para criar o validador do
 		// XML do evento. O primeiro item da lista DEVE sempre ser o xmldsig-core-schema.xsd .
@@ -100,5 +99,6 @@ public class ValidarEventosStage {
 			xsdList.clear();
 		}
 		xsdsDAO.closeConnection();
+		ubesDAO.closeConnection();
 	}
 }

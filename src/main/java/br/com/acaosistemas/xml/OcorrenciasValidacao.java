@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 /***
  * Classe armazenar cada uma das ocorrencias da critica do XML do evento contra o seu
  * respectivo arquivo XSD.
- * A partir dessa classe será construido o XML com as ocorrencias encontradas.
+ * A partir dessa classe sera construido o XML com as ocorrencias encontradas.
  * 
  * Referencia: http://codippa.com/how-to-create-xml-from-java-objects-using-jaxb/
  * 
@@ -21,9 +21,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name="ocorrencias")
 public class OcorrenciasValidacao {
-
-	private static final int CODIGO_VALIDACAO_XML = 999;
-	private static final int TIPO_ERRO_XML        = 1;
 	
 	private List<OcorrenciaValidacao> ocorrenciasValidacao;
 	

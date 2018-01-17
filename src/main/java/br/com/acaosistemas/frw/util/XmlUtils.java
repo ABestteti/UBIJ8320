@@ -6,7 +6,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 
 /***
@@ -17,8 +16,6 @@ import org.xml.sax.InputSource;
  */
 public final class XmlUtils {
 
-	private static final String XMLNAMESPACE = "xmlns";
-	
 	/***
 	 * Recupera o namespace do nodo root de um XML
 	 * @param pXml
