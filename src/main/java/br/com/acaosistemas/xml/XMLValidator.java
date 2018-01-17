@@ -36,6 +36,7 @@ import br.com.acaosistemas.main.Versao;
  */
 public class XMLValidator {
 
+	private final int CODIGO_PADRAO = 999;
 	private MensagemDeValidacao[] mensagensDeValidacao;
 	
 	public XMLValidator() {
@@ -53,7 +54,7 @@ public class XMLValidator {
 		// Popula a lista de ocorrencias com as mensagens de erro do validor XML
 		for (int i = 0; i < getMensagensDeValidacao().length; i++) {
 			OcorrenciaValidacao occ = new OcorrenciaValidacao();
-			occ.setCodigo(999);
+			occ.setCodigo(CODIGO_PADRAO);
 			occ.setDescricao(
 					Versao.getStringVersao() +
 					" [Linha " + getMensagensDeValidacao()[i].getLinha() +
@@ -75,17 +76,18 @@ public class XMLValidator {
 			JAXBContext context = JAXBContext.newInstance(OcorrenciasValidacao.class);
 			
 			Marshaller mmarshaller = context.createMarshaller();
+			
 			// A propriedade "jaxb.fragment=TRUE" evita a geracao da linha
-			// com a declaracao do XML: <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+			// com de declaracao do XML: 
+			//    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 			mmarshaller.setProperty("jaxb.fragment", Boolean.TRUE);
 			
 			// Ativa a formatacao do XML produzido.
 			mmarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			
+			// Cria o XML com base na hierarquia de classes
 			mmarshaller.marshal(ocorrenciaValidacaoXML, writer);
-
-			System.out.println("XML:\n"+writer.getBuffer().toString());
 		} catch (JAXBException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
