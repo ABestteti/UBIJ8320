@@ -1,10 +1,10 @@
 package br.com.acaosistemas.xml;
 
 /**
- * Mensagens elaboradas durante a validação do documento XML.
+ * Mensagens elaboradas durante a validacao do documento XML.
  * 
  * <p>
- * <b>Empresa:</b> Ação Sistemas de Informática LTDA.
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
  * </p>
  * 
  * @author Marcelo Leite
@@ -22,12 +22,12 @@ public class MensagemDeValidacao {
 	private Integer coluna;
 
 	/**
-	 * Mensagem de validação armazenada.
+	 * Mensagem de validacao armazenada.
 	 */
 	private String mensagem;
 
 	/**
-	 * Construtor da mensagem de validação.
+	 * Construtor da mensagem de validacao.
 	 * 
 	 * @param linha
 	 *            Linha do documento XML a qual a mensagem se refere.
@@ -43,7 +43,7 @@ public class MensagemDeValidacao {
 	}
 
 	/**
-	 * Construtor da mensagem de validação.
+	 * Construtor da mensagem de validacao.
 	 * 
 	 * @param mensagem
 	 *            Mensagem a ser armazenada.
@@ -73,9 +73,9 @@ public class MensagemDeValidacao {
 	}
 
 	/**
-	 * Retorna o conteúdo da mensagem de validação.
+	 * Retorna o conteudo da mensagem de validacao.
 	 * 
-	 * @return O conteúdo da mensagem de validação.
+	 * @return O conteudo da mensagem de validacao.
 	 */
 	public String getMensagem() {
 		return mensagem;
@@ -90,5 +90,4 @@ public class MensagemDeValidacao {
 		resultado += mensagem;
 		return resultado;
 	}
-
 }

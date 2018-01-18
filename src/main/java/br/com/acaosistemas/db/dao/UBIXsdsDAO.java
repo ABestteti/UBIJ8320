@@ -33,7 +33,7 @@ public class UBIXsdsDAO {
 		
 		try {
 			stmt = conn.prepareStatement(
-					"SELECT uxsd.codigo, uxsd.documento, uxsd.rowid FROM ubi_xsds uxsd WHERE uxsd.name_space = ?");
+					"SELECT uxsd.codigo, uxsd.documento, uxsd.rowid FROM ubi_xsds uxsd WHERE uxsd.target_namespace = ?");
 			
 			stmt.setString(1, pNameSpace);
 			

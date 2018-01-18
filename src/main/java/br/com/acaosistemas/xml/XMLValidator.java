@@ -1,13 +1,10 @@
 package br.com.acaosistemas.xml;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
@@ -24,10 +21,20 @@ import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 
 import br.com.acaosistemas.main.Versao;
+import br.com.acaosistemas.xml.retornoloteevento.OcorrenciaValidacao;
+import br.com.acaosistemas.xml.retornoloteevento.OcorrenciasValidacao;
 
 /**
  * Classe responsavel por oferecer o servico de validacao de um XML contra o seu
  * respectivo XSD.
+ * 
+ * Caso o metodo {@link #hasErros()} retorne TRUE, significa que foram encontrados 
+ * erros de validacao no XML. Nesse caso, utilize o metodo {@link #getMensagensDeValidacao()} 
+ * ou {@link #getMensagensXmlFormat()} para obter as mensagens geradas por este validador.
+ * 
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * </p>
  * 
  * @author Marcelo Leite
  * @author Anderson Bestteti Santos
@@ -35,12 +42,15 @@ import br.com.acaosistemas.main.Versao;
  */
 public class XMLValidator {
 
+	private final int CODIGO_PADRAO = 999;
 	private MensagemDeValidacao[] mensagensDeValidacao;
 	
 	public XMLValidator() {
-
 	}
 	
+	/***
+	 * @return Um StringBuffer com as mensagens de validacao no formato XML.
+	 */
 	public StringBuffer getMensagensXmlFormat() {
 		
 		StringWriter writer                            = new StringWriter();
@@ -50,13 +60,13 @@ public class XMLValidator {
 		// Popula a lista de ocorrencias com as mensagens de erro do validor XML
 		for (int i = 0; i < getMensagensDeValidacao().length; i++) {
 			OcorrenciaValidacao occ = new OcorrenciaValidacao();
-			occ.setCodigo(999);
+			occ.setCodigo(CODIGO_PADRAO);
 			occ.setDescricao(
 					Versao.getStringVersao() +
-					getMensagensDeValidacao()[i].getLinha() +
-					"; " +
-					getMensagensDeValidacao()[i].getColuna() +
-					": " +
+					" [Linha " + getMensagensDeValidacao()[i].getLinha() +
+					";" +
+					" Coluna " + getMensagensDeValidacao()[i].getColuna() +
+					"]: " +
 					getMensagensDeValidacao()[i].getMensagem());
 			
 			ocorrenciasValidacao.add(occ);
@@ -72,12 +82,18 @@ public class XMLValidator {
 			JAXBContext context = JAXBContext.newInstance(OcorrenciasValidacao.class);
 			
 			Marshaller mmarshaller = context.createMarshaller();
-			mmarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);			
-			mmarshaller.marshal(ocorrenciaValidacaoXML, writer);
 			
-			System.out.println("XML:\n"+writer.getBuffer().toString());
+			// A propriedade "jaxb.fragment=TRUE" evita a geracao da linha
+			// com de declaracao do XML: 
+			//    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+			mmarshaller.setProperty("jaxb.fragment", Boolean.TRUE);
+			
+			// Ativa a formatacao do XML produzido.
+			mmarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			
+			// Cria o XML com base na hierarquia de classes
+			mmarshaller.marshal(ocorrenciaValidacaoXML, writer);
 		} catch (JAXBException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -85,14 +101,28 @@ public class XMLValidator {
 		return writer.getBuffer();
 	}
 
+	/***
+	 * 
+	 * @return Um array MensagemDeValidacao com todas as mensagens geradas pelo
+	 * validador de XML.
+	 */
 	public MensagemDeValidacao[] getMensagensDeValidacao() {
 		return mensagensDeValidacao;
 	}
 
+	/***
+	 * Recebe um array do tipo {@link MensgamDeValidacao} para armazenar as mensagens
+	 * de validacao geradas pelo validador de XML.
+	 * @param mensagensDeValidacao
+	 */
 	private void setMensagensDeValidacao(MensagemDeValidacao[] mensagensDeValidacao) {
 		this.mensagensDeValidacao = mensagensDeValidacao;
 	}
 
+	/***
+	 * 
+	 * @return True se o XML tem erros de validacao. False, caso contrario.
+	 */
 	public boolean hasErros() {
 		return (getMensagensDeValidacao().length > 0) ? true : false;
 	}
@@ -101,11 +131,10 @@ public class XMLValidator {
 	 * Valida um documento XML de acordo com os XSDs informados.
 	 * 
 	 * @param pXml
-	 *            Caminho para o arquivo XML a ser validado.
+	 *            XML a ser validado.
 	 * @param pXSDs
-	 *            Caminho para os arquivos XSD utilizados para a validação do
+	 *            Lista de XSDs utilizados para a validacao do
 	 *            XML.
-	 * @return As mensagens retornadas pela validação do documento.
 	 */
 	public void validateXML(StringBuffer pXml, List<StringBuffer> pXSDs) {
 
@@ -153,12 +182,12 @@ public class XMLValidator {
 				setMensagensDeValidacao(errorHandlerValidacaoXml.getMensagensDeValidacao());	
 				
 			} catch (SAXException ex) {
-				System.out.println(ex.getMessage());
+				ex.printStackTrace();
 			} catch (IOException ex) {
-				System.out.println(ex.getMessage());
+				ex.printStackTrace();
 			}
 		} catch (SAXException ex) {
-			System.out.println(ex.getMessage());
+			ex.printStackTrace();
 		}	
 	}
 }

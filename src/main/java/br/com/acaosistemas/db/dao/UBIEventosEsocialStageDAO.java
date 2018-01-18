@@ -99,4 +99,23 @@ public class UBIEventosEsocialStageDAO {
 			throw new RuntimeException(e);
 		}		
 	}
+
+	public void updateXmlRetornoValidacao(UBIEventosEsocialStage pUbesRow) {
+		PreparedStatement stmt = null;
+		
+		try {
+			stmt = conn.prepareStatement(
+					"UPDATE ubi_eventos_esocial_stage ubes SET ubes.xml_retorno_validacao = ?, ubes.status = ? WHERE ubes.rowid = ?");
+		
+			stmt.setString(1, pUbesRow.getXmlRetornoValidacao().toString());
+			stmt.setInt(2, pUbesRow.getStatus().getId());
+			stmt.setString(3, pUbesRow.getRowId());
+			
+			stmt.execute();
+			stmt.close();
+			
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}				
+	}
 }

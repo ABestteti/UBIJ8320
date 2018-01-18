@@ -7,9 +7,18 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
+
+/***
+ * Classe utilitaria para tratamento de documentos XML
+ * 
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * </p>
+ * 
+ * @author Anderson Bestteti Santos
+ *
+ */
 
 public final class XMLUtils {
 
@@ -31,9 +40,8 @@ public final class XMLUtils {
         // Habilita a busca de namespaces no XML
         factory.setNamespaceAware(true);
         
-        try  
-        {  
-        	    // Cria um novo documento DOM
+        try {  
+        	// Cria um novo documento DOM
             builder = factory.newDocumentBuilder();
             
             // Cria a representacao DOM do XML recebido
@@ -51,5 +59,4 @@ public final class XMLUtils {
         }            
 		return xsdNameSpace;
 	}
-
 }

@@ -6,9 +6,9 @@ public enum SimNaoEnum {
      */
     SIM("S", "Sim"),
     /**
-     * Enumeracao para N�o.
+     * Enumeracao para Nao.
      */
-    NAO("N", "Não");
+    NAO("N", "Nao");
     private String id;
     private String descricao;
 

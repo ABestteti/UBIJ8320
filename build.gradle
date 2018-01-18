@@ -13,8 +13,8 @@ apply plugin: 'java-library'
 apply plugin: 'java-library-distribution'
 
 //version = '1.0'
-def versionAcao = "3.0.00.31.10.2017"
-def appName = "UBIJ8320 - Servico cliente do web service de assinatura de eventos do eSocial"
+def versionAcao = "3.0.00.15.01.2018"
+def appName = "UBIJ8320 - Servico de consumo do web service de assinatura de evento e validacao de XML."
 
 tasks.withType(JavaCompile) {
   options.encoding = "ISO-8859-1"
@@ -54,7 +54,7 @@ dependencies {
         // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.9.1'
           
-    compile files('lib/ojdbc7.jar')
+    compile files('lib/ojdbc7.jar')    
 }
 
  // Task "distZip" added by plugin "java-library-distribution":
@@ -73,4 +73,16 @@ jar {
     // How-to add class path:
     //     https://stackoverflow.com/questions/22659463/add-classpath-in-manifest-using-gradle
     //     https://gist.github.com/simon04/6865179
+}
+
+// Adiciona na task distZip a inclusao do diretorio resources e o seu conteudo no arquivo ZIP e TAR
+// para distribuicao da aplicacao.
+// Referencias:
+// https://stackoverflow.com/questions/5743036/deploy-additional-files-in-gradle-application-plugin
+// http://leetschau.github.io/blog/2014/11/19/153734/
+distZip {
+    into(project.name) {
+        from '.'
+        include 'resources/*'
+    }
 }

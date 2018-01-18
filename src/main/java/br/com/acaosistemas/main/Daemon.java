@@ -3,10 +3,12 @@ package br.com.acaosistemas.main;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import br.com.acaosistemas.db.connection.ConnectionFactory;
 import br.com.acaosistemas.db.connection.DBConnectionInfo;
 import br.com.acaosistemas.db.dao.UBIRuntimesDAO;
+import br.com.acaosistemas.frw.util.ResetPipe;
 import oracle.jdbc.OracleTypes;
 
 /**
@@ -63,7 +65,7 @@ public class Daemon {
 		String pipeConteudo  = "";
 		
 		// Variaveis para trabalhar com o pipe de banco
-		String pipeName   = "";
+		String pipeName   = null;
 		int    pipeCmd    = -1;
 		int    pipeStatus = -1;
 		
@@ -76,9 +78,17 @@ public class Daemon {
 		pipeName = runtimeDAO.getRuntimeValue("PIPEUBIASSEVT");
 		runtimeDAO.closeConnection();
 		
+		if (pipeName == null) {
+			throw new RuntimeException("O runtime PIPEUBIASSEVT nao esta cadastrado no UBI.");
+		}
 		// Abre conexao com o banco para leitura do pipe do
 		// banco de dados.
 		conn = new ConnectionFactory().getConnection();
+		
+		// Remove todas as mensagens do pipe indicado em "pipeName"
+		ResetPipe.reset(conn, pipeName);
+
+		System.out.println(Versao.ver());
 		
 		System.out.println("Processando registros da area de stage...");
 		
@@ -143,6 +153,7 @@ public class Daemon {
 
 				switch (pipeCmd) {
 				case CONSULTAR_STATUS:
+					System.out.println(new Timestamp(System.currentTimeMillis()).toString());
 					System.out.println("Recebido comando status do servico!");
 					
 					// Nesse caso o objeto pipeConteudo armazena o nome do
@@ -152,6 +163,7 @@ public class Daemon {
 					statusDaemon(pipeConteudo);
 			     	break;
 				case CONSULTAR_VERSAO_DAEMON:
+					System.out.println(new Timestamp(System.currentTimeMillis()).toString());
 					System.out.println("Recebido comando versao do servico!");
 					
 					// Nesse caso o objeto pipeConteudo armazena o nome do
@@ -160,6 +172,7 @@ public class Daemon {
 					versaoDaemon(pipeConteudo);
 			     	break;	
 				case STOP_DAEMON:
+					System.out.println(new Timestamp(System.currentTimeMillis()).toString());
 					System.out.println("Recebido comando stop do servico!");
 					stopDaemon = true;
 					break;
@@ -176,8 +189,12 @@ public class Daemon {
 			
 			if (!stopDaemon) {
 				// Inicia o processo de leitura dos registros da tabela de stage
-				// cujo status seja A_ASSINAR (201)
+				// cujo status seja A_ASSINAR (101)
 				new AssinarEventosStage().lerRegistrosNaoAssinados();
+				
+				// Inicia o processo de validacao dos registros da tabela de stage
+				// cujo status seja A_VALIDAR (201)
+				new ValidarEventosStage().lerRegistrosParaValidacao();
 			}
 		}
 		
