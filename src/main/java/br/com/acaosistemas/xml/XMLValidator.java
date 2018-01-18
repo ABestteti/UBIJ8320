@@ -21,6 +21,8 @@ import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 
 import br.com.acaosistemas.main.Versao;
+import br.com.acaosistemas.xml.retornoloteevento.OcorrenciaValidacao;
+import br.com.acaosistemas.xml.retornoloteevento.OcorrenciasValidacao;
 
 /**
  * Classe responsavel por oferecer o servico de validacao de um XML contra o seu
