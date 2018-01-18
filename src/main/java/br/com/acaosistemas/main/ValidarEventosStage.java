@@ -20,6 +20,10 @@ import br.com.acaosistemas.xml.XMLValidator;
  * Classe reposnsavel por validar os XML dos eventos, armazenados na tabela UBI_EVENTOS_ESOCIAL_STAGE,
  * contra os seu respectivo XSD.
  * 
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * </p>
+ * 
  * @author Anderson Bestteti Santos
  *
  */

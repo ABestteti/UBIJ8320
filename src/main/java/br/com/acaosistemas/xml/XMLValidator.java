@@ -30,6 +30,10 @@ import br.com.acaosistemas.main.Versao;
  * erros de validacao no XML. Nesse caso, utilize o metodo {@link #getMensagensDeValidacao()} 
  * ou {@link #getMensagensXmlFormat()} para obter as mensagens geradas por este validador.
  * 
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * </p>
+ * 
  * @author Marcelo Leite
  * @author Anderson Bestteti Santos
  *
