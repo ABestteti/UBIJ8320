@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /***
- * Classe armazenar cada uma das ocorrencias da critica do XML do evento contra o seu
+ * Classe para armazenar cada uma das ocorrencias da critica do XML do evento contra o seu
  * respectivo arquivo XSD.
  * A partir dessa classe sera construido o XML com as ocorrencias encontradas.
  * 
