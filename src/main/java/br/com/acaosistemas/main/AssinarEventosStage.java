@@ -16,8 +16,13 @@ import br.com.acaosistemas.frw.util.ExceptionUtils;
 import br.com.acaosistemas.wsclientes.ClienteWSAssinarEvento;
 
 /**
- * Classe responsavel por porcessar todos os eventos da tabela UBI_EVENTOS_ESOCIAL_STAGE que
- * estejam com status "A ASSINAR".
+ * Classe responsavel por processar todos os eventos da tabela UBI_EVENTOS_ESOCIAL_STAGE que
+ * estejam com status "A ASSINAR". Para cada registro retornado, sera invocado o web service
+ * de assinatura de aventos do UBI.
+ * 
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * </p>
  * 
  * @author Anderson Bestteti Santos
  *
