@@ -1,4 +1,4 @@
-package br.com.acaosistemas.xml;
+package br.com.acaosistemas.xml.retornoloteevento;
 
 import javax.xml.bind.annotation.XmlElement;
 
