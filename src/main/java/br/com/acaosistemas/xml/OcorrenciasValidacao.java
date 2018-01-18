@@ -15,6 +15,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  * Essa ramificacao esta documentada no Manual de Orientacao do Desenvolvedor do eSocial
  * na secao "Leiaute Mensagem de Retorno do Processamento do Lote", ramificacao "ocorrencias".
  * 
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * </p>
+ * 
  * @author Anderson Bestteti Santos
  *
  */

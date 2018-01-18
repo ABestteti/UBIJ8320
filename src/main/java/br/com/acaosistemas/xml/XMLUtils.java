@@ -9,6 +9,17 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 
+/***
+ * Classe utilitaria para tratamento de documentos XML
+ * 
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * </p>
+ * 
+ * @author Anderson Bestteti Santos
+ *
+ */
+
 public final class XMLUtils {
 
 	/**

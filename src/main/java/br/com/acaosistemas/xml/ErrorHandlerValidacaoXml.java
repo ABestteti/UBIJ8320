@@ -6,18 +6,19 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXParseException;
 
 /**
- * Realiza o tratamento de erros durante a validação de um arquivo XML.
+ * Realiza o tratamento de erros durante a validacao de um arquivo XML.
  * 
  * <p>
- * <b>Empresa:</b> Ação Sistemas de Informática LTDA.
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
  * </p>
  * 
  * @author Marcelo Leite
+ * @author Anderson Bestteti
  */
 public class ErrorHandlerValidacaoXml implements ErrorHandler {
 
 	/**
-	 * Lista de erros encontrados durante a validação.
+	 * Lista de erros encontrados durante a validacao.
 	 */
 	private MensagemDeValidacao[] mensagensDeValidacao;
 
@@ -32,10 +33,10 @@ public class ErrorHandlerValidacaoXml implements ErrorHandler {
 	}
 
 	/**
-	 * Elabora a mensagem de validação a partir da exceção obtida.
+	 * Elabora a mensagem de validacao a partir da excecao obtida.
 	 * 
-	 * @param Exceção
-	 *            ocorrida durante a validação.
+	 * @param excecao ocorrida durante a validacao.
+	 * 
 	 */
 	private MensagemDeValidacao elaborarMensagem(SAXParseException excecao) {
 		MensagemDeValidacao resultado = new MensagemDeValidacao(new Integer(excecao.getLineNumber()),
@@ -44,7 +45,7 @@ public class ErrorHandlerValidacaoXml implements ErrorHandler {
 	}
 
 	/**
-	 * Tratamento realizado quando ocorre um erro durante a validação.
+	 * Tratamento realizado quando ocorre um erro durante a validacao.
 	 * 
 	 * @see org.xml.sax.ErrorHandler#error(org.xml.sax.SAXParseException)
 	 */
@@ -54,7 +55,7 @@ public class ErrorHandlerValidacaoXml implements ErrorHandler {
 	}
 
 	/**
-	 * Tratamento realizado quando ocorre um erro fatal durante a validação.
+	 * Tratamento realizado quando ocorre um erro fatal durante a validacao.
 	 * 
 	 * @see org.xml.sax.ErrorHandler#fatalError(org.xml.sax.SAXParseException)
 	 */
@@ -64,7 +65,7 @@ public class ErrorHandlerValidacaoXml implements ErrorHandler {
 	}
 
 	/**
-	 * Tratamento realizado quando ocorre um aviso durante a validação.
+	 * Tratamento realizado quando ocorre um aviso durante a validacao.
 	 * 
 	 * @see org.xml.sax.ErrorHandler#warning(org.xml.sax.SAXParseException)
 	 */
@@ -74,7 +75,7 @@ public class ErrorHandlerValidacaoXml implements ErrorHandler {
 	}
 
 	/**
-	 * Limpa as mensagens de erro de validação armazenados.
+	 * Limpa as mensagens de erro de validacao armazenados.
 	 */
 	public void limparErros() {
 		indice = 0;
@@ -96,5 +97,4 @@ public class ErrorHandlerValidacaoXml implements ErrorHandler {
 				.toArray(new MensagemDeValidacao[indice]);
 		return mensagens;
 	}
-
 }

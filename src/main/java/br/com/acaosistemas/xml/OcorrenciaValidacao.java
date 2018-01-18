@@ -9,6 +9,10 @@ import javax.xml.bind.annotation.XmlElement;
  * 
  * Essa ramificacao esta documentada no Manual de Orientacao do Desenvolvedor do eSocial
  * na secao "Leiaute Mensagem de Retorno do Processamento do Lote", ramificacao "ocorrencia".
+ *
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * </p>
  * 
  * @author Anderson Bestteti Santos
  *
@@ -17,7 +21,7 @@ import javax.xml.bind.annotation.XmlElement;
 public class OcorrenciaValidacao {
 
 	private static final int    CODIGO_OCORRENCIA_VALIDACAO_XML    = 1;
-	private static final String DESCRICAO_OCORRENCIA_VALIDACAO_XML = "XML do evento foi rejeitado pela validação do seu respectivo XSD.";
+	private static final String DESCRICAO_OCORRENCIA_VALIDACAO_XML = "XML do evento foi rejeitado pela validacao do seu respectivo XSD.";
 	private static final int    TIPO_OCORRENCIA_VALIDACAO_XML      = 1;
 	
 	int    codigo;
