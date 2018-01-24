@@ -3,7 +3,6 @@ package br.com.acaosistemas.xml.retornoloteevento;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /***
  * Classe para armazenar cada uma das ocorrencias da critica do XML do evento contra o seu
@@ -12,8 +11,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  * 
  * Referencia: http://codippa.com/how-to-create-xml-from-java-objects-using-jaxb/
  * 
- * Essa ramificacao esta documentada no Manual de Orientacao do Desenvolvedor do eSocial
- * na secao "Leiaute Mensagem de Retorno do Processamento do Lote", ramificacao "ocorrencias".
+ * Essa ramificacao  esta documentada no Manual de Orientacao do Desenvolvedor do eSocial
+ * na secao "Leiaute Mensagem de Retorno do Processamento do Lote", ramificacao "<ocorrencias>".
  * 
  * <p>
  * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
@@ -23,7 +22,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  */
 
-@XmlRootElement(name="ocorrencias")
+//@XmlRootElement(name="ocorrencias")
 public class OcorrenciasValidacao {
 	
 	private List<OcorrenciaValidacao> ocorrenciasValidacao;

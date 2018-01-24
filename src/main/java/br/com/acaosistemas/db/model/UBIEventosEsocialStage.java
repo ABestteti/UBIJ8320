@@ -18,6 +18,7 @@ public class UBIEventosEsocialStage {
     private StatusEsocialEventosStageEnum status;
     private StringBuffer xmlRetornoValidacao;
     private NClob xml;
+    private String idESocial;
     private String rowId;
     
 	public Timestamp getDtMov() {
@@ -66,5 +67,13 @@ public class UBIEventosEsocialStage {
 
 	public void setRowId(String rowId) {
 		this.rowId = rowId;
+	}
+
+	public String getIdESocial() {
+		return idESocial;
+	}
+
+	public void setIdESocial(String idESocial) {
+		this.idESocial = idESocial;
 	}
 }

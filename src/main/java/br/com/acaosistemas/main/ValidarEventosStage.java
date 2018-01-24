@@ -80,7 +80,7 @@ public class ValidarEventosStage {
 				e.printStackTrace();
 			}
 
-			xmlValidator.validateXML(xmlEvento, xsdList);
+			xmlValidator.validate(ubesRow.getIdESocial(), xmlEvento, xsdList);
 			
 			if (xmlValidator.hasErros()) {
 				// O XML apresenta erros de validacao contra o XSD.

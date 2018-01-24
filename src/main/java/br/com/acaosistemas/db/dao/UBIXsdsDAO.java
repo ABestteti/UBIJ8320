@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import br.com.acaosistemas.db.connection.ConnectionFactory;
-import br.com.acaosistemas.db.model.UBIRuntimes;
 import br.com.acaosistemas.db.model.UBIXsds;
 
 public class UBIXsdsDAO {

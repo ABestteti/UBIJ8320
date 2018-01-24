@@ -58,7 +58,7 @@ public class UBIEventosEsocialStageDAO {
 	
 		try {
 			stmt = conn.prepareStatement(
-					"SELECT ubes.dt_mov, ubes.status, ubes.xml_assinado, ubes.xml, ubes.rowid FROM ubi_eventos_esocial_stage ubes WHERE ubes.status = ?");
+					"SELECT ubes.dt_mov, ubes.status, ubes.xml_assinado, ubes.xml, ubes.id_esocial, ubes.rowid FROM ubi_eventos_esocial_stage ubes WHERE ubes.status = ?");
 			
 			stmt.setInt(1, pStatus.getId());
 			
@@ -72,6 +72,7 @@ public class UBIEventosEsocialStageDAO {
 				ubes.setStatus(StatusEsocialEventosStageEnum.getById(rs.getInt("status")));
 				ubes.setXmlAssinado(SimNaoEnum.getById(rs.getString("xml_assinado")));
 				ubes.setXml(rs.getNClob("xml"));
+				ubes.setIdESocial(rs.getString("id_esocial"));
 				
 				listaUBIEsocialEventosStage.add(ubes);
 			}
