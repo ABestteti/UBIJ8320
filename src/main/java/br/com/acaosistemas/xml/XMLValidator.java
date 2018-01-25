@@ -13,6 +13,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -32,8 +34,6 @@ import br.com.acaosistemas.xml.retornoevento.jaxb.TOcorrencias;
 import br.com.acaosistemas.xml.retornoevento.jaxb.TOcorrencias.Ocorrencia;
 import br.com.acaosistemas.xml.retornoloteevento.OcorrenciaValidacao;
 import br.com.acaosistemas.xml.retornoloteevento.OcorrenciasValidacao;
-import br.com.acaosistemas.xml.retornoloteevento.jaxb.ESocial.RetornoProcessamentoLoteEventos.RetornoEventos.Evento;
-import br.com.acaosistemas.xml.retornoloteevento.jaxb.ObjectFactory;
 
 /**
  * Classe responsavel por oferecer o servico de validacao de um XML contra o seu
@@ -157,7 +157,9 @@ public class XMLValidator {
 		// TAG de referencia: <retornoProcessamentoLoteEventos>
 		br.com.acaosistemas.xml.retornoloteevento.jaxb.TArquivoEsocial 
 		   esocialRetornoEventoJaxB = new br.com.acaosistemas.xml.retornoloteevento.jaxb.TArquivoEsocial();
-		esocialRetornoEventoJaxB.setAny(Element.);
+		
+		DocumentBuilder domBuilder = DocumentBuilderFactory .newDocumentBuilder();		
+		esocialRetornoEventoJaxB.setAny(new Element().setTextContent(retornoEvento.toString()));
 		
 		// Retorna o XML produzido que estar encapsulado no objeto write
 		return retornoProcessamentoLoteEvento.getBuffer();
