@@ -1,9 +1,9 @@
 package br.com.acaosistemas.xml;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -15,13 +15,15 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
-import org.w3c.dom.Element;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
@@ -32,8 +34,6 @@ import br.com.acaosistemas.xml.retornoevento.jaxb.ESocial.RetornoEvento;
 import br.com.acaosistemas.xml.retornoevento.jaxb.TDadosProcessamentoEvento;
 import br.com.acaosistemas.xml.retornoevento.jaxb.TOcorrencias;
 import br.com.acaosistemas.xml.retornoevento.jaxb.TOcorrencias.Ocorrencia;
-import br.com.acaosistemas.xml.retornoloteevento.OcorrenciaValidacao;
-import br.com.acaosistemas.xml.retornoloteevento.OcorrenciasValidacao;
 
 /**
  * Classe responsavel por oferecer o servico de validacao de um XML contra o seu
@@ -66,29 +66,13 @@ public class XMLValidator {
 	 */
 	public StringBuffer getMensagensXmlFormat() {
 		
-		StringWriter retornoEvento                     = new StringWriter();
-		StringWriter retornoProcessamentoLoteEvento    = new StringWriter();
-		List<OcorrenciaValidacao> ocorrenciasValidacao = new ArrayList<OcorrenciaValidacao>();
-		OcorrenciasValidacao ocorrenciaValidacaoXML    = new OcorrenciasValidacao();
-		
-		TOcorrencias ocorrenciasJaxB = new TOcorrencias();
+		StringWriter retornoEvento                  = new StringWriter();
+		StringWriter retornoProcessamentoLoteEvento = new StringWriter();
+		TOcorrencias ocorrenciasJaxB                = new TOcorrencias();
 				
 		// Popula a lista de ocorrencias com as mensagens de erro do validor XML
 		for (int i = 0; i < getMensagensDeValidacao().length; i++) {
-			OcorrenciaValidacao occ = new OcorrenciaValidacao();
-			
 			Ocorrencia ocorrenciaJaxB = new Ocorrencia();
-			
-			occ.setCodigo(CODIGO_PADRAO);
-			occ.setDescricao(
-					Versao.getStringVersao() +
-					" [Linha " + getMensagensDeValidacao()[i].getLinha() +
-					";" +
-					" Coluna " + getMensagensDeValidacao()[i].getColuna() +
-					"]: " +
-					getMensagensDeValidacao()[i].getMensagem());
-			
-			ocorrenciasValidacao.add(occ);
 			
 			ocorrenciaJaxB.setTipo(TIPO_ERRO);
 			ocorrenciaJaxB.setCodigo(CODIGO_PADRAO);
@@ -102,8 +86,6 @@ public class XMLValidator {
 			
 			ocorrenciasJaxB.getOcorrencia().add(ocorrenciaJaxB);
 		}
-		
-		ocorrenciaValidacaoXML.setOcorrenciasValidacao(ocorrenciasValidacao);
 		
 		TDadosProcessamentoEvento processamentoEventoJaxB = new TDadosProcessamentoEvento();
 		processamentoEventoJaxB.setCdResposta(CODIGO_PADRAO);
@@ -153,13 +135,100 @@ public class XMLValidator {
 			e.printStackTrace();
 		}
 		
+		//============
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = null;
+		Document doc               = null;
+		try {
+			docBuilder = dbf.newDocumentBuilder();
+//			doc = docBuilder.parse(
+//					new ByteArrayInputStream(
+//							retornoEvento.toString().getBytes(
+//									StandardCharsets.UTF_8)));
+			doc = docBuilder.parse(new InputSource(new StringReader(retornoEvento.toString())));
+		} catch (SAXException | IOException | ParserConfigurationException e) {
+			e.printStackTrace();
+		}		
+		//============
+		
 		// Construcao do XML do processamento do lote de eventos propriamente dito
 		// TAG de referencia: <retornoProcessamentoLoteEventos>
 		br.com.acaosistemas.xml.retornoloteevento.jaxb.TArquivoEsocial 
-		   esocialRetornoEventoJaxB = new br.com.acaosistemas.xml.retornoloteevento.jaxb.TArquivoEsocial();
+		   esocialOcorrenciasEventoJaxB = new br.com.acaosistemas.xml.retornoloteevento.jaxb.TArquivoEsocial();
 		
-		DocumentBuilder domBuilder = DocumentBuilderFactory .newDocumentBuilder();		
-		esocialRetornoEventoJaxB.setAny(new Element().setTextContent(retornoEvento.toString()));
+		// Prepara as ocorrencias da validacao para adicionar na ramificacao <evento>
+		// do XML do processamento do lote de eventos.
+		// TAG de referencia: <retornoEvento>
+		esocialOcorrenciasEventoJaxB.setAny(doc.getDocumentElement());
+
+		// Adiciona as ocorrencias da validacao do XML do evento na ramificacao <evento>
+		// TAG de referencia: <evento>
+		br.com.acaosistemas.xml.retornoloteevento.jaxb.ESocial.RetornoProcessamentoLoteEventos.RetornoEventos.Evento 
+		   esocialLoteEventoJaxB = new br.com.acaosistemas.xml.retornoloteevento.jaxb.ObjectFactory().createESocialRetornoProcessamentoLoteEventosRetornoEventosEvento();
+		esocialLoteEventoJaxB.setRetornoEvento(esocialOcorrenciasEventoJaxB);
+		esocialLoteEventoJaxB.setId(idESocial);
+		
+		// Prepara a criacao da ramificacao <retornoEventos>
+		// TAG de referencia: <retornoEventos>
+		br.com.acaosistemas.xml.retornoloteevento.jaxb.ESocial.RetornoProcessamentoLoteEventos.RetornoEventos
+		   esocialLoteRetornoEventosJaxB = new br.com.acaosistemas.xml.retornoloteevento.jaxb.ObjectFactory().createESocialRetornoProcessamentoLoteEventosRetornoEventos();
+		
+		// Prepara a criacao da ramificacao <retornoProcessamentoLoteEventos>
+		// TAG de referencia: <retornoProcessamentoLoteEventos>
+		br.com.acaosistemas.xml.retornoloteevento.jaxb.ESocial.RetornoProcessamentoLoteEventos
+		   esocialRetornoProcessamentoLoteEventosJaxB = new br.com.acaosistemas.xml.retornoloteevento.jaxb.ObjectFactory().createESocialRetornoProcessamentoLoteEventos();
+		
+        // Adiciona a ramificacao <retornoEventos> na ramificacao <retornoProcessamentoLoteEventos>
+		// TAG de referencia: <retornoProcessamentoLoteEventos>
+		esocialRetornoProcessamentoLoteEventosJaxB.setRetornoEventos(esocialLoteRetornoEventosJaxB);
+
+		// Prepara a criacao da tag de grupo <status> do XML de processamento do lote
+		// de eventos.
+		// TAG de referencia: <status>
+		br.com.acaosistemas.xml.retornoloteevento.jaxb.TStatus
+		   esocialStatusLoteEventosJaxB = new br.com.acaosistemas.xml.retornoloteevento.jaxb.ObjectFactory().createTStatus();
+		esocialStatusLoteEventosJaxB.setCdResposta(CODIGO_PADRAO);
+		esocialStatusLoteEventosJaxB.setDescResposta(
+				"Lote com erros de validação no XML do evento contra o seu respectivo XSD.");
+
+		// Adiciona a tag de grupo <status> na ramificacao <retornoProcessamentoLoteEventos>
+		// TAG de referencia: <status>
+		esocialRetornoProcessamentoLoteEventosJaxB.setStatus(esocialStatusLoteEventosJaxB);
+		
+		// Prepara a criacao do XML de retorno do processamento do lote de eventos
+		// TAG de referencia: <eSocial>
+		br.com.acaosistemas.xml.retornoloteevento.jaxb.ESocial
+		   esocialRetornoProcessamentoLoteJaxB = new br.com.acaosistemas.xml.retornoloteevento.jaxb.ObjectFactory().createESocial();
+		
+		// Adiciona a ramificacao <retornoProcessamentoLoteEventos> na ramificacao raiz <eSocial>
+		// TAG de referencia: <eSocial>
+		esocialRetornoProcessamentoLoteJaxB.setRetornoProcessamentoLoteEventos(esocialRetornoProcessamentoLoteEventosJaxB);
+
+		// Cria o XML (marshalling) do processamento do lote de eventos a partir da hierarquia de classes
+		// escpasuladas no objeto esocialRetornoProcessamentoLoteJaxB.
+		try {
+			// Constroe o XML com base na hierarquia de classes ESocial.
+			// Para tanto, cria um contexto JAXB para criar o XML
+			// onde o nodo raiz do XML e determinado pela classe ESocial.class
+			// do package br.com.acaosistemas.xml.retornoloteevento.jaxb.
+			JAXBContext context = JAXBContext.newInstance(
+					br.com.acaosistemas.xml.retornoloteevento.jaxb.ESocial.class);
+			
+			Marshaller mmarshaller = context.createMarshaller();
+						
+			// Ativa a formatacao do XML produzido.
+			mmarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			
+			// Cria o XML com base na hierarquia de classes encapsuladas no objeto
+			// esocialRetornoProcessamentoLoteJaxB.
+			mmarshaller.marshal(
+					esocialRetornoProcessamentoLoteJaxB,
+					retornoProcessamentoLoteEvento);
+			
+		} catch (JAXBException e) {
+			e.printStackTrace();
+		}
+		
 		
 		// Retorna o XML produzido que estar encapsulado no objeto write
 		return retornoProcessamentoLoteEvento.getBuffer();
