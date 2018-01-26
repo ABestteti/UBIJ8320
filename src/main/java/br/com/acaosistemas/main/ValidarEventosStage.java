@@ -104,5 +104,7 @@ public class ValidarEventosStage {
 		}
 		xsdsDAO.closeConnection();
 		ubesDAO.closeConnection();
+		
+		System.out.println("   Finalizado validacao dos XMLs da UBI_EVENTOS_ESOCIAL_STAGE.");
 	}
 }
