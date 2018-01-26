@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -23,7 +24,6 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
 import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
@@ -42,7 +42,18 @@ import br.com.acaosistemas.xml.retornoevento.jaxb.TOcorrencias.Ocorrencia;
  * Caso o metodo {@link #hasErros()} retorne TRUE, significa que foram encontrados 
  * erros de validacao no XML. Nesse caso, utilize o metodo {@link #getMensagensDeValidacao()} 
  * ou {@link #getMensagensXmlFormat()} para obter as mensagens geradas por este validador.
- * 
+ * <p>
+ * Referencia: http://codippa.com/how-to-create-xml-from-java-objects-using-jaxb/
+ * <p>
+ * <p>
+ * As classes dos packages br.com.acaosistemas.xml.retornoevento.jaxb e
+ * br.com.acaosistemas.xml.retornoloteevento.jaxb sao geradas com a ferramenta xjc do Java.
+ * As referencia acima apresenta um tutorial de como utilizar o xjc para criar as classes
+ * Java a partir de um arquivo XSD.
+ * <p>
+ * A partir das classes geradas podemos criar uma representacao do XML em memoria para
+ * depois grava-lo em arquivo ou em banco de dados. Essa transformacao chamase "marshalling"
+ * <p>
  * <p>
  * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
  * </p>
@@ -100,14 +111,33 @@ public class XMLValidator {
 			e1.printStackTrace();
 		}
 
+		// Construcao da ramificacao <retornoEvento>, definida no
+		// XML de processamento do lote de eventos.
 		RetornoEvento retornoEventoJaxB = new RetornoEvento();
+		
+		// Adiciona as ocorrencias de validacao do XML do evento na ramificacao
+		// <retornoEvento>
 		retornoEventoJaxB.setProcessamento(processamentoEventoJaxB);
+		
+		// Adiciona o atributo Id da tag <retornoEvento>
 		retornoEventoJaxB.setId(idESocial);
 		
+		// Prepara a criacao da tag <recepcao> no XML do evento.
+		br.com.acaosistemas.xml.retornoevento.jaxb.TDadosRecepcao 
+
+		// Cria a tag <dhRecepcao> na ramifacacao <recepcao>
+		dadosRecepcao = new br.com.acaosistemas.xml.retornoevento.jaxb.TDadosRecepcao();
+		dadosRecepcao.setDhRecepcao(processamentoEventoJaxB.getDhProcessamento());
+		
+		// Adiciona a ramificacao <recepcao> no XML de processamento do
+		// evento.
+		retornoEventoJaxB.setRecepcao(dadosRecepcao);
+		
+		// Preparacao do XML do evento, o qual armazena as ocorrencias de validacao.
 		ESocial esocialEventoJaxB = new ESocial();
 		esocialEventoJaxB.setRetornoEvento(retornoEventoJaxB);
 		
-		// Construcao do XML da validacao do evento propriamente dito.
+		// Construcao do XML (marshalling) da validacao do evento propriamente dito.
 		// TAG de referencia: <retornoEvento>
 		try {
 			// Constroe o XML com base na hierarquia dos classes OcorrenciasValidacao e
@@ -124,8 +154,8 @@ public class XMLValidator {
 			//    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 			mmarshaller.setProperty("jaxb.fragment", Boolean.TRUE);
 			
-			// Ativa a formatacao do XML produzido.
-			mmarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			// Desativa a formatacao do XML produzido.
+			mmarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.FALSE);
 			
 			// Cria o XML com base na hierarquia de classes da secao de processamento
 			// do evento, onde sao registradas as mensagens de validacao do XML.
@@ -135,31 +165,34 @@ public class XMLValidator {
 			e.printStackTrace();
 		}
 		
-		//============
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder = null;
-		Document doc               = null;
+		// Construcao da representacao do XML das ocorrencias do evento no formato
+		// DOM para permitir adicionar esse XML no XML do processamento do lote de
+		// eventos. O objeto docXmlOcorrenciasEvento e passado como parametro para
+		// metodo setAny da classe TArquivoEsocial.
+		DocumentBuilderFactory dbf       = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder       = null;
+		Document docXmlOcorrenciasEvento = null;
+
 		try {
 			docBuilder = dbf.newDocumentBuilder();
-//			doc = docBuilder.parse(
-//					new ByteArrayInputStream(
-//							retornoEvento.toString().getBytes(
-//									StandardCharsets.UTF_8)));
-			doc = docBuilder.parse(new InputSource(new StringReader(retornoEvento.toString())));
+			docXmlOcorrenciasEvento = docBuilder.parse(
+					new ByteArrayInputStream(
+							retornoEvento.toString().getBytes(
+									StandardCharsets.UTF_8)));
 		} catch (SAXException | IOException | ParserConfigurationException e) {
 			e.printStackTrace();
 		}		
-		//============
 		
-		// Construcao do XML do processamento do lote de eventos propriamente dito
-		// TAG de referencia: <retornoProcessamentoLoteEventos>
+		// Construcao da ramificacao <retornoEvento> para encampsular o XML das
+		// ocorrencias de validacao do XML do evento, que estao armazenadas no objeto
+		// docXmlOcorrenciasEvento.
 		br.com.acaosistemas.xml.retornoloteevento.jaxb.TArquivoEsocial 
 		   esocialOcorrenciasEventoJaxB = new br.com.acaosistemas.xml.retornoloteevento.jaxb.TArquivoEsocial();
 		
 		// Prepara as ocorrencias da validacao para adicionar na ramificacao <evento>
 		// do XML do processamento do lote de eventos.
 		// TAG de referencia: <retornoEvento>
-		esocialOcorrenciasEventoJaxB.setAny(doc.getDocumentElement());
+		esocialOcorrenciasEventoJaxB.setAny(docXmlOcorrenciasEvento.getDocumentElement());
 
 		// Adiciona as ocorrencias da validacao do XML do evento na ramificacao <evento>
 		// TAG de referencia: <evento>
@@ -172,6 +205,7 @@ public class XMLValidator {
 		// TAG de referencia: <retornoEventos>
 		br.com.acaosistemas.xml.retornoloteevento.jaxb.ESocial.RetornoProcessamentoLoteEventos.RetornoEventos
 		   esocialLoteRetornoEventosJaxB = new br.com.acaosistemas.xml.retornoloteevento.jaxb.ObjectFactory().createESocialRetornoProcessamentoLoteEventosRetornoEventos();
+		esocialLoteRetornoEventosJaxB.getEvento().add(esocialLoteEventoJaxB);
 		
 		// Prepara a criacao da ramificacao <retornoProcessamentoLoteEventos>
 		// TAG de referencia: <retornoProcessamentoLoteEventos>
@@ -223,14 +257,13 @@ public class XMLValidator {
 			// esocialRetornoProcessamentoLoteJaxB.
 			mmarshaller.marshal(
 					esocialRetornoProcessamentoLoteJaxB,
-					retornoProcessamentoLoteEvento);
-			
+					retornoProcessamentoLoteEvento);			
 		} catch (JAXBException e) {
 			e.printStackTrace();
 		}
 		
 		
-		// Retorna o XML produzido que estar encapsulado no objeto write
+		// Retorna o XML produzido
 		return retornoProcessamentoLoteEvento.getBuffer();
 	}
 
