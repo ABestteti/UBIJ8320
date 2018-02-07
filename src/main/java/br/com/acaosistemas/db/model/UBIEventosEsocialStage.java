@@ -1,5 +1,6 @@
 package br.com.acaosistemas.db.model;
 
+import java.sql.NClob;
 import java.sql.Timestamp;
 
 import br.com.acaosistemas.db.enumeration.SimNaoEnum;
@@ -15,6 +16,9 @@ public class UBIEventosEsocialStage {
     private Timestamp  dtMov;
     private SimNaoEnum xmlAssinado;
     private StatusEsocialEventosStageEnum status;
+    private StringBuffer xmlRetornoValidacao;
+    private NClob xml;
+    private String idESocial;
     private String rowId;
     
 	public Timestamp getDtMov() {
@@ -33,6 +37,30 @@ public class UBIEventosEsocialStage {
 		this.xmlAssinado = xmlAssinado;
 	}
 
+	public StatusEsocialEventosStageEnum getStatus() {
+		return status;
+	}
+
+	public void setStatus(StatusEsocialEventosStageEnum status) {
+		this.status = status;
+	}
+
+	public StringBuffer getXmlRetornoValidacao() {
+		return xmlRetornoValidacao;
+	}
+
+	public void setXmlRetornoValidacao(StringBuffer xmlRetornoValidacao) {
+		this.xmlRetornoValidacao = xmlRetornoValidacao;
+	}
+
+	public NClob getXml() {
+		return xml;
+	}
+
+	public void setXml(NClob xml) {
+		this.xml = xml;
+	}
+	
 	public String getRowId() {
 		return rowId;
 	}
@@ -41,11 +69,11 @@ public class UBIEventosEsocialStage {
 		this.rowId = rowId;
 	}
 
-	public StatusEsocialEventosStageEnum getStatus() {
-		return status;
+	public String getIdESocial() {
+		return idESocial;
 	}
 
-	public void setStatus(StatusEsocialEventosStageEnum status) {
-		this.status = status;
+	public void setIdESocial(String idESocial) {
+		this.idESocial = idESocial;
 	}
 }

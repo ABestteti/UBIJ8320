@@ -25,7 +25,6 @@ public class UBIEventosEsocialStageDAO {
 		try {
 			conn.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			throw new RuntimeException(e);
 		}
 	}
@@ -53,15 +52,15 @@ public class UBIEventosEsocialStageDAO {
 		return ubes;
 	}
 	
-	public List<UBIEventosEsocialStage> listUBIEsocialEventosStage() {
-		PreparedStatement stmt             = null;
+	public List<UBIEventosEsocialStage> listUBIEsocialEventosStage(StatusEsocialEventosStageEnum pStatus) {
+		PreparedStatement stmt                                   = null;
 		List<UBIEventosEsocialStage> listaUBIEsocialEventosStage = new ArrayList<UBIEventosEsocialStage>();
 	
 		try {
 			stmt = conn.prepareStatement(
-					"SELECT ubes.dt_mov, ubes.status, ubes.xml_assinado, ubes.rowid FROM ubi_eventos_esocial_stage ubes WHERE ubes.status = ?");
+					"SELECT ubes.dt_mov, ubes.status, ubes.xml_assinado, ubes.xml, ubes.id_esocial, ubes.rowid FROM ubi_eventos_esocial_stage ubes WHERE ubes.status = ?");
 			
-			stmt.setInt(1, StatusEsocialEventosStageEnum.A_ASSINAR.getId());
+			stmt.setInt(1, pStatus.getId());
 			
 			ResultSet rs = stmt.executeQuery();
 			
@@ -72,6 +71,8 @@ public class UBIEventosEsocialStageDAO {
 				ubes.setDtMov(rs.getTimestamp("dt_mov"));
 				ubes.setStatus(StatusEsocialEventosStageEnum.getById(rs.getInt("status")));
 				ubes.setXmlAssinado(SimNaoEnum.getById(rs.getString("xml_assinado")));
+				ubes.setXml(rs.getNClob("xml"));
+				ubes.setIdESocial(rs.getString("id_esocial"));
 				
 				listaUBIEsocialEventosStage.add(ubes);
 			}
@@ -98,5 +99,24 @@ public class UBIEventosEsocialStageDAO {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}		
+	}
+
+	public void updateXmlRetornoValidacao(UBIEventosEsocialStage pUbesRow) {
+		PreparedStatement stmt = null;
+		
+		try {
+			stmt = conn.prepareStatement(
+					"UPDATE ubi_eventos_esocial_stage ubes SET ubes.xml_retorno_validacao = ?, ubes.status = ? WHERE ubes.rowid = ?");
+		
+			stmt.setString(1, pUbesRow.getXmlRetornoValidacao().toString());
+			stmt.setInt(2, pUbesRow.getStatus().getId());
+			stmt.setString(3, pUbesRow.getRowId());
+			
+			stmt.execute();
+			stmt.close();
+			
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}				
 	}
 }
