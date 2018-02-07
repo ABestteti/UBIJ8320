@@ -89,21 +89,21 @@ public class ValidarEventosStage {
 				
 				ubesDAO = new UBIEventosEsocialStageDAO();				
 				ubesDAO.updateXmlRetornoValidacao(ubesRow);
-				ubesDAO.closeConnection();
+				//ubesDAO.closeConnection();
 			} else {
 				// O XML passou com sucesso pela validacao com o XSD
 				ubesRow.setStatus(StatusEsocialEventosStageEnum.VALIDADO_COM_SUCESSO);
 				
 				ubesDAO = new UBIEventosEsocialStageDAO();				
 				ubesDAO.updateStatus(ubesRow);
-				ubesDAO.closeConnection();				
+				//ubesDAO.closeConnection();				
 			}
 						
 			// Remove o XSD do XML do evento da lista de XSDs
 			xsdList.clear();
 		}
-		xsdsDAO.closeConnection();
-		ubesDAO.closeConnection();
+		//xsdsDAO.closeConnection();
+		//ubesDAO.closeConnection();
 		
 		System.out.println("   Finalizado validacao dos XMLs da UBI_EVENTOS_ESOCIAL_STAGE.");
 	}

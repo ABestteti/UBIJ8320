@@ -1,6 +1,6 @@
 package br.com.acaosistemas.db.dao;
 
-import java.sql.Connection;
+import oracle.jdbc.OracleConnection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -17,19 +17,19 @@ import br.com.acaosistemas.main.Versao;
  */
 public class UBIEventosEsStageLogDAO {
 
-	private Connection                conn;
+	private OracleConnection conn;
 	
 	public UBIEventosEsStageLogDAO() {
 		conn = new ConnectionFactory().getConnection();
 	}
 
-	public void closeConnection () {
-		try {
-			conn.close();
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
+//	public void closeConnection () {
+//		try {
+//			conn.close();
+//		} catch (SQLException e) {
+//			throw new RuntimeException(e);
+//		}
+//	}
 	
 	public void insert(UBIEventosEsStageLog pUbelRow) {
 		final String      ORA_DUP_VAL_ON_INDEX_ERROR = "ORA-00001"; // CHAVE DUPLICADA

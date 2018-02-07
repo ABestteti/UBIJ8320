@@ -1,7 +1,7 @@
 package br.com.acaosistemas.main;
 
 import java.sql.CallableStatement;
-import java.sql.Connection;
+import oracle.jdbc.OracleConnection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
@@ -29,13 +29,14 @@ public class Daemon {
 	
 	private static final int DEAMON_ALIVE     = 1;
 
-	private Connection conn;
+	private OracleConnection  conn;
 	private CallableStatement stmt;
 
 	public static void main(String[] args) {
 
+		System.out.println(Versao.ver()+"\n");
+
 		if (args.length != 3) {
-			System.out.println(Versao.ver()+"\n");
 			System.out.println("Quantidade de parametros insuficientes.");
 			System.out.println("Utilize o comando abaixo para executar a aplicacao, utilizando o Java 1.8 ou superior:");
 			System.out.println("java -jar UBIJ8320.jar usuarioDB senhaDB servidorDB:portaListner:instanciaDB");
@@ -76,7 +77,7 @@ public class Daemon {
 		UBIRuntimesDAO runtimeDAO = new UBIRuntimesDAO();
 		
 		pipeName = runtimeDAO.getRuntimeValue("PIPEUBIASSEVT");
-		runtimeDAO.closeConnection();
+		//runtimeDAO.closeConnection();
 		
 		if (pipeName == null) {
 			throw new RuntimeException("O runtime PIPEUBIASSEVT nao esta cadastrado no UBI.");
@@ -88,8 +89,6 @@ public class Daemon {
 		// Remove todas as mensagens do pipe indicado em "pipeName"
 		ResetPipe.reset(conn, pipeName);
 
-		System.out.println(Versao.ver());
-		
 		System.out.println("Processando registros da area de stage...");
 		
 		// Loop para leitura constante do pipe de comunicacao

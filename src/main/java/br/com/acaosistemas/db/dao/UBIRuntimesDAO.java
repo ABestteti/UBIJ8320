@@ -1,6 +1,6 @@
 package br.com.acaosistemas.db.dao;
 
-import java.sql.Connection;
+import oracle.jdbc.OracleConnection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,20 +10,20 @@ import br.com.acaosistemas.db.model.UBIRuntimes;
 
 public class UBIRuntimesDAO {
 
-	private Connection conn;
-	private UBIRuntimes runt;
+	private OracleConnection conn;
+	private UBIRuntimes      runt;
 	
 	public UBIRuntimesDAO() {
 		conn = new ConnectionFactory().getConnection();
 	}
 	
-	public void closeConnection () {
-		try {
-			conn.close();
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
+//	public void closeConnection () {
+//		try {
+//			conn.close();
+//		} catch (SQLException e) {
+//			throw new RuntimeException(e);
+//		}
+//	}
 	
 	public String getRuntimeValue(String pRuntimeID) {
 		PreparedStatement stmt = null;

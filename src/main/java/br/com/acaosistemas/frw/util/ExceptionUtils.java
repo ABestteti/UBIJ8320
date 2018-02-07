@@ -61,6 +61,6 @@ public final class ExceptionUtils {
 		ubel.setNumErro(new Long(pUbesRow.getStatus().getId()));
 		
 		ubelDAO.insert(ubel);
-		ubelDAO.closeConnection();		
+		//ubelDAO.closeConnection();		
 	}
 }

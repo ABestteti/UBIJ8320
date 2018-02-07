@@ -1,40 +1,52 @@
 package br.com.acaosistemas.db.connection;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
+
+import oracle.jdbc.OracleConnection;
+import oracle.jdbc.pool.OracleDataSource;
+import oracle.ucp.jdbc.PoolDataSource;
+import oracle.ucp.jdbc.PoolDataSourceFactory;
 
 public class ConnectionFactory {
 
-	public Connection getConnection() {
-	        try {
+	// Get the PoolDataSource for UCP
+	//PoolDataSource pds = PoolDataSourceFactory.getPoolDataSource();
+	static PoolDataSource pds = null;
 
-	            Class.forName("oracle.jdbc.driver.OracleDriver");
+	//static OracleDataSource orclDS = null;
+	static OracleConnection connDB = null;
+	
+	public OracleConnection getConnection() {
+	        try {	
+	        	if (pds == null) {
+	        		System.out.print("Conectando no banco de dados: ");
 
-	        } catch (ClassNotFoundException e) {
+	        		pds = PoolDataSourceFactory.getPoolDataSource();
 
-	            System.err.println("Biblioteca JDBC da Oracle nao encontrada.");
-	            throw new RuntimeException(e);
-	        }
-	        
-	        try {
-	        	    // Define o tempo de timeout de conexao com o banco em 10 segundos
-	            	DriverManager.setLoginTimeout(10);
-	            	
-	            	
-                 // Retorna uma conexo com o banco de dados.
-	         	return DriverManager.getConnection
-	         		   (
-	                    "jdbc:oracle:thin:@"+DBConnectionInfo.getDbStrConnect(), 
-	                    DBConnectionInfo.getDbUserName(), 
-	                    DBConnectionInfo.getDbPassWord()
-	                   );
+	        		// Prepara a conexao com o banco Oracle
+	        		pds.setConnectionFactoryClassName("oracle.jdbc.pool.OracleDataSource");	        
+	        		pds.setURL("jdbc:oracle:thin:@"+DBConnectionInfo.getDbStrConnect());
+	        		pds.setUser(DBConnectionInfo.getDbUserName());
+	        		pds.setPassword(DBConnectionInfo.getDbPassWord());
 
+	        		// Definie propriedades do pool de conexao do banco Oracle
+	        		pds.setConnectionPoolName("JDBC_UCP_POOL");
+	        		pds.setInitialPoolSize(1);
+	        		pds.setMinPoolSize(1);
+	        		pds.setMaxPoolSize(5);
+	        		
+	        		
+		           	// Cria uma conexao com o banco Oracle
+	        		connDB = (OracleConnection) pds.getConnection();
+	        		
+	        		System.out.println("Ok");
+	        	}
+	        	
+	        	return connDB;
 	        } catch (SQLException e) {
-
 	            System.err.println("Erro durante a conexo com o banco de dados.");
 	            System.err.println("Revise se os parametros usuario, senha e string"); 
-	            System.err.println("de conexo estão corretos.");
+	            System.err.println("de conexao estao corretos, ou se existe algum problema com a rede.");
 	            throw new RuntimeException(e);
 	        }
 		}

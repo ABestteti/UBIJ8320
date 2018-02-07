@@ -66,7 +66,7 @@ public class AssinarEventosStage {
 				
 				UBIEventosEsStageLogDAO ubelDAO = new UBIEventosEsStageLogDAO();				
 				ubelDAO.insert(ubel);
-				ubelDAO.closeConnection();
+				//ubelDAO.closeConnection();
 				
 			} catch (MalformedURLException e) {
 				// Caso a chamada do web service do correio retornar a excecao
@@ -89,7 +89,7 @@ public class AssinarEventosStage {
 			}
 		}
 		
-		ubesDAO.closeConnection();
+		//ubesDAO.closeConnection();
 		System.out.println("   Finalizado assinatura XMLs da UBI_EVENTOS_ESOCIAL_STAGE.");
 	}
 }

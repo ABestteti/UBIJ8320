@@ -54,7 +54,8 @@ dependencies {
         // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.9.1'
           
-    compile files('lib/ojdbc7.jar')    
+    compile files('lib/ojdbc7.jar')
+    compile files('lib/ucp.jar')     
 }
 
  // Task "distZip" added by plugin "java-library-distribution":

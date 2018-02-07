@@ -1,6 +1,6 @@
 package br.com.acaosistemas.db.dao;
 
-import java.sql.Connection;
+import oracle.jdbc.OracleConnection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,20 +10,20 @@ import br.com.acaosistemas.db.model.UBIXsds;
 
 public class UBIXsdsDAO {
 
-	private Connection conn;
-	private UBIXsds xsds;
+	private OracleConnection conn;
+	private UBIXsds          xsds;
 	
 	public UBIXsdsDAO() {
 		conn = new ConnectionFactory().getConnection();
 	}
 	
-	public void closeConnection () {
-		try {
-			conn.close();
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
+//	public void closeConnection () {
+//		try {
+//			conn.close();
+//		} catch (SQLException e) {
+//			throw new RuntimeException(e);
+//		}
+//	}
 	
 	public UBIXsds getUBIXsds(String pNameSpace) {
 		xsds = new UBIXsds();
@@ -46,9 +46,13 @@ public class UBIXsdsDAO {
 			
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
-		}
-		
+		} finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}		
 		return xsds;
 	}
-
 }

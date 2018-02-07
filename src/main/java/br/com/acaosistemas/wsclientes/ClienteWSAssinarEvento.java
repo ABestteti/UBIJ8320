@@ -36,7 +36,7 @@ public class ClienteWSAssinarEvento {
 		wsEndPoint = runtimeDAO.getRuntimeValue("UBIWSASSINAEVT");
 		
 		// Fecha a conexao com o banco de dados
-		runtimeDAO.closeConnection();
+		//runtimeDAO.closeConnection();
 
 		// Monta o parametro de chamada do web service
 		// O formato da data deve ser o seguinte: YYYY-MM-DD/HH24:MI:SS.FF
@@ -58,17 +58,17 @@ public class ClienteWSAssinarEvento {
 			
 			if (request.getResponseCode() != HttpURLConnection.HTTP_OK) {
 			    if (request.getResponseCode() == HttpURLConnection.HTTP_INTERNAL_ERROR) {
-				    throw new MalformedURLException("Código HTTP retornado: " + 
+				    throw new MalformedURLException("Codigo HTTP retornado: " + 
 			                                        request.getResponseCode() + 
 			                                        " [" + wsEndPoint + "]\n" +
-			                                        "Parâmetros: "            + 
+			                                        "Parametros: "            + 
 			                                        parametros);
 			    }
 			    else {
-			    	    throw new IOException("Código HTTP retornado: "     + 
+			    	    throw new IOException("Codigo HTTP retornado: "     + 
 			                              request.getResponseCode() + 
 			                              " [" + wsEndPoint + "]\n" +
-			                              "Parâmetros: "            +
+			                              "Parametros: "            +
 			                              parametros);
 			    }
 			}
