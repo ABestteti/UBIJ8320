@@ -13,7 +13,7 @@ apply plugin: 'java-library'
 apply plugin: 'java-library-distribution'
 
 //version = '1.0'
-def versionAcao = "3.0.00.15.01.2018"
+def versionAcao = "3.0.00.02.03.2018"
 def appName = "UBIJ8320 - Servico de consumo do web service de assinatura de evento e validacao de XML."
 
 tasks.withType(JavaCompile) {
@@ -36,6 +36,7 @@ task fatJar(type: Jar) {
 repositories {
     // Use 'jcenter' for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
+    mavenLocal()
     jcenter()
     mavenCentral()
 }
@@ -51,9 +52,9 @@ dependencies {
     // 'test.useTestNG()' to your build script.
     testCompile 'junit:junit:4.12'
     
-        // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
+    // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.9.1'
-          
+              
     compile files('lib/ojdbc7.jar')
     compile files('lib/ucp.jar')     
 }

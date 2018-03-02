@@ -1,14 +1,17 @@
 package br.com.acaosistemas.main;
 
 import java.sql.CallableStatement;
-import oracle.jdbc.OracleConnection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import br.com.acaosistemas.db.connection.ConnectionFactory;
 import br.com.acaosistemas.db.connection.DBConnectionInfo;
 import br.com.acaosistemas.db.dao.UBIRuntimesDAO;
 import br.com.acaosistemas.frw.util.ResetPipe;
+import oracle.jdbc.OracleConnection;
 import oracle.jdbc.OracleTypes;
 
 /**
@@ -32,8 +35,10 @@ public class Daemon {
 	private OracleConnection  conn;
 	private CallableStatement stmt;
 
+	private static Logger LOGGER = LoggerFactory.getLogger(Daemon.class);	
+			
 	public static void main(String[] args) {
-
+		
 		System.out.println(Versao.ver()+"\n");
 
 		if (args.length != 3) {
@@ -42,6 +47,8 @@ public class Daemon {
 			System.out.println("java -jar UBIJ8320.jar usuarioDB senhaDB servidorDB:portaListner:instanciaDB");
 			System.exit(1);
 		}
+		
+		LOGGER.info(Versao.ver());
 		
 		Daemon procPoboxXml = new Daemon();
 		
@@ -59,6 +66,10 @@ public class Daemon {
 		// Entra no loop de leitura da tabela UBI_POBOX_XML
 		procPoboxXml.lerPipeDB();
 
+	}
+	
+	private void configLogger() {
+	   	
 	}
 	
     private void lerPipeDB() {
