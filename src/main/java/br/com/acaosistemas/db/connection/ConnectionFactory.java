@@ -3,17 +3,13 @@ package br.com.acaosistemas.db.connection;
 import java.sql.SQLException;
 
 import oracle.jdbc.OracleConnection;
-import oracle.jdbc.pool.OracleDataSource;
 import oracle.ucp.jdbc.PoolDataSource;
 import oracle.ucp.jdbc.PoolDataSourceFactory;
 
 public class ConnectionFactory {
 
 	// Get the PoolDataSource for UCP
-	//PoolDataSource pds = PoolDataSourceFactory.getPoolDataSource();
-	static PoolDataSource pds = null;
-
-	//static OracleDataSource orclDS = null;
+	static PoolDataSource   pds    = null;
 	static OracleConnection connDB = null;
 	
 	public OracleConnection getConnection() {
@@ -29,12 +25,11 @@ public class ConnectionFactory {
 	        		pds.setUser(DBConnectionInfo.getDbUserName());
 	        		pds.setPassword(DBConnectionInfo.getDbPassWord());
 
-	        		// Definie propriedades do pool de conexao do banco Oracle
+	        		// Define propriedades do pool de conexao do banco Oracle
 	        		pds.setConnectionPoolName("JDBC_UCP_POOL");
 	        		pds.setInitialPoolSize(1);
 	        		pds.setMinPoolSize(1);
 	        		pds.setMaxPoolSize(5);
-	        		
 	        		
 		           	// Cria uma conexao com o banco Oracle
 	        		connDB = (OracleConnection) pds.getConnection();
