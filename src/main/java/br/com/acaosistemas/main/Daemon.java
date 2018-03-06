@@ -15,14 +15,14 @@ import oracle.jdbc.OracleConnection;
 import oracle.jdbc.OracleTypes;
 
 /**
+ * Classe reponsavel por ler o pipe de comunicacao do banco.
  * 
  * @author Anderson Bestteti
- * Classe reponsavel por ler o pipe de comunicacao do banco
- * 
- * Referencias:
- *  https://stackoverflow.com/questions/19333011/how-to-call-a-stored-function-from-jdbc
- *  http://docs.oracle.com/cd/A84870_01/doc/java.816/a81354/samapp2.htm
- *  https://docs.oracle.com/cd/B19306_01/java.102/b14355/toc.htm
+ * <p>
+ * Referencias:<br>
+ *  https://stackoverflow.com/questions/19333011/how-to-call-a-stored-function-from-jdbc<br>
+ *  http://docs.oracle.com/cd/A84870_01/doc/java.816/a81354/samapp2.htm<br>
+ *  https://docs.oracle.com/cd/B19306_01/java.102/b14355/toc.htm<br>
  */
 public class Daemon {
 
@@ -66,10 +66,6 @@ public class Daemon {
 		// Entra no loop de leitura da tabela UBI_POBOX_XML
 		procPoboxXml.lerPipeDB();
 
-	}
-	
-	private void configLogger() {
-	   	
 	}
 	
     private void lerPipeDB() {
