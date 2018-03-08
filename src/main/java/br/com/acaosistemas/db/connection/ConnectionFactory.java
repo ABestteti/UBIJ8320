@@ -55,10 +55,11 @@ public class ConnectionFactory {
 	        		            + " com sucesso.");
 	        	}
 	        } catch (SQLException e) {
-	            logger.info(  "Erro durante a conexo com o banco de dados."
-	                        + "Revise se os parametros usuario, senha e string"
-	            	        + "de conexao estao corretos, ou se existe algum problema com a rede.",
-	            	        new RuntimeException(e));
+	            logger.fatal(  "\nErro durante a conexo com o banco de dados.\n"
+	                         + "Revise se os parametros usuario, senha e string\n"
+	            	         + "de conexao estao corretos, ou se existe algum problema com a rede.",
+	            	        e);
+	            throw new RuntimeException(e);
 	        }
         	return connDB;
 		}

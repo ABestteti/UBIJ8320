@@ -30,7 +30,7 @@ import br.com.acaosistemas.main.Daemon;
 
 public class ClienteWSAssinarEvento {
 	
-	private static final Logger logger = LogManager.getLogger(Daemon.class);
+	private static final Logger logger = LogManager.getLogger(ClienteWSAssinarEvento.class);
 	
 	/**
 	 * Construtor default da classe
