@@ -13,7 +13,6 @@ import br.com.acaosistemas.db.dao.UBIRuntimesDAO;
 import br.com.acaosistemas.db.model.UBIEventosEsocialStage;
 import br.com.acaosistemas.frw.util.ExceptionUtils;
 import br.com.acaosistemas.frw.util.HttpUtils;
-import br.com.acaosistemas.main.Daemon;
 
 /**
  * Classe cliente do web service de assinatura de evento do eSocial
