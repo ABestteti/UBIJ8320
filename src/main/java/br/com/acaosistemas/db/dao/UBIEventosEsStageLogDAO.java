@@ -54,7 +54,7 @@ public class UBIEventosEsStageLogDAO {
 
 			stmt.setLong(1, pUbelRow.getUbesSeqReg());
 			stmt.setLong(2, getNextSeqReg());
-			stmt.setDate(3, pUbelRow.getDtMov());
+			stmt.setDate(3, new java.sql.Date(new java.util.Date().getTime()));
 			stmt.setString(4, Versao.getStringVersao() + "\n" + pUbelRow.getMensagem());
 			stmt.setInt(5, pUbelRow.getStatus().getId());
 			stmt.setLong(6, pUbelRow.getNumErro());

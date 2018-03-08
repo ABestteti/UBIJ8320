@@ -2,10 +2,9 @@ package br.com.acaosistemas.main;
 
 import java.sql.CallableStatement;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import br.com.acaosistemas.db.connection.ConnectionFactory;
 import br.com.acaosistemas.db.connection.DBConnectionInfo;
@@ -41,10 +40,9 @@ public class Daemon {
 	private static final Logger logger = LogManager.getLogger(Daemon.class);	
 			
 	public static void main(String[] args) {
-		
-		System.out.println(Versao.ver()+"\n");
 
 		if (args.length != 3) {
+			System.out.println(Versao.ver()+"\n");
 			System.out.println("Quantidade de parametros insuficientes.");
 			System.out.println("Utilize o comando abaixo para executar a aplicacao, utilizando o Java 1.8 ou superior:");
 			System.out.println("java -jar UBIJ8320.jar usuarioDB senhaDB servidorDB:portaListner:instanciaDB");

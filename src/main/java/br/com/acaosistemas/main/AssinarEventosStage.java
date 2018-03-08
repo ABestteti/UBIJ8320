@@ -3,18 +3,17 @@ package br.com.acaosistemas.main;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import br.com.acaosistemas.db.dao.UBIEventosEsocialStageDAO;
 import br.com.acaosistemas.db.dao.UBIEventosEsStageLogDAO;
+import br.com.acaosistemas.db.dao.UBIEventosEsocialStageDAO;
 import br.com.acaosistemas.db.enumeration.StatusEsocialEventosStageEnum;
-import br.com.acaosistemas.db.model.UBIEventosEsocialStage;
 import br.com.acaosistemas.db.model.UBIEventosEsStageLog;
+import br.com.acaosistemas.db.model.UBIEventosEsocialStage;
 import br.com.acaosistemas.frw.util.ExceptionUtils;
 import br.com.acaosistemas.wsclientes.ClienteWSAssinarEvento;
 
@@ -57,7 +56,7 @@ public class AssinarEventosStage {
 		for (UBIEventosEsocialStage ubesRow : listaUbiEventosStage) {
 			
 			logger.info("     Processando rowId: "+ubesRow.getRowId());
-			logger.info("     Data de movimentacao: "+ubesRow.getDtMov());
+			logger.info("     SeqReg...........: "+ubesRow.getSeqReg());
 				
 			try {
 				clientWS.execWebService(ubesRow);
@@ -68,6 +67,7 @@ public class AssinarEventosStage {
 				ubesDAO.updateStatus(ubesRow);
 				
 				// Insere no log o resultado da chamada do web service
+				ubel.setUbesSeqReg(ubesRow.getSeqReg());
 				ubel.setDtMov(new java.sql.Date(new java.util.Date().getTime()));
 				ubel.setMensagem(StatusEsocialEventosStageEnum.ASSINADO_COM_SUCESSO.getDescricao());
 				ubel.setStatus(StatusEsocialEventosStageEnum.ASSINADO_COM_SUCESSO);

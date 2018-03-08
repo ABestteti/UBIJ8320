@@ -49,7 +49,7 @@ public final class ExceptionUtils {
 		UBIEventosEsStageLogDAO ubelDAO = new UBIEventosEsStageLogDAO();
 		UBIEventosEsStageLog    ubel    = new UBIEventosEsStageLog();
 		
-		ubel.setSeqReg(pUbesRow.getSeqReg());
+		ubel.setUbesSeqReg(pUbesRow.getSeqReg());
 		ubel.setDtMov(new java.sql.Date(new java.util.Date().getTime()));
 		ubel.setStatus(pUbesRow.getStatus());
 		ubel.setMensagem(pUbesRow.getStatus().getDescricao() +
