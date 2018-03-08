@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN">
+<Configuration status="INFO">
 	<Appenders>
 		<File name="CustomLogFile" fileName="UBIJ8320.log">
 			<PatternLayout>
@@ -12,9 +12,9 @@
 		</Console>
 	</Appenders>
 	<Loggers>
-		<Root level="trace">
-			<AppenderRef ref="CustomLogFile" />
-			<!-- <AppenderRef ref="Console" /> -->
+		<Root level="all">
+			<!-- <AppenderRef ref="CustomLogFile" /> -->
+			<AppenderRef ref="Console" />
 		</Root>
 	</Loggers>
 </Configuration>

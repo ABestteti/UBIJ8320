@@ -4,8 +4,8 @@ import java.sql.CallableStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import br.com.acaosistemas.db.connection.ConnectionFactory;
 import br.com.acaosistemas.db.connection.DBConnectionInfo;
@@ -17,6 +17,9 @@ import oracle.jdbc.OracleTypes;
 /**
  * Classe reponsavel por ler o pipe de comunicacao do banco.
  * 
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * </p>
  * @author Anderson Bestteti
  * <p>
  * Referencias:<br>
@@ -35,7 +38,7 @@ public class Daemon {
 	private OracleConnection  conn;
 	private CallableStatement stmt;
 
-	private static Logger LOGGER = LoggerFactory.getLogger(Daemon.class);	
+	private static final Logger logger = LogManager.getLogger(Daemon.class);	
 			
 	public static void main(String[] args) {
 		
@@ -48,7 +51,7 @@ public class Daemon {
 			System.exit(1);
 		}
 		
-		LOGGER.info(Versao.ver());
+		logger.info("\n".concat(Versao.ver()));
 		
 		Daemon procPoboxXml = new Daemon();
 		
@@ -96,7 +99,7 @@ public class Daemon {
 		// Remove todas as mensagens do pipe indicado em "pipeName"
 		ResetPipe.reset(conn, pipeName);
 
-		System.out.println("Processando registros da area de stage...");
+		logger.info("Processando registros da area de stage...");
 		
 		// Loop para leitura constante do pipe de comunicacao
 		// do deamon e por procura de registros com status 0 (nao processado)
@@ -159,8 +162,7 @@ public class Daemon {
 
 				switch (pipeCmd) {
 				case CONSULTAR_STATUS:
-					System.out.println(new Timestamp(System.currentTimeMillis()).toString());
-					System.out.println("Recebido comando status do servico!");
+					logger.info("Recebido comando status do servico!");
 					
 					// Nesse caso o objeto pipeConteudo armazena o nome do
 					// pipe de retorno que sera usado para enviar o status
@@ -169,8 +171,7 @@ public class Daemon {
 					statusDaemon(pipeConteudo);
 			     	break;
 				case CONSULTAR_VERSAO_DAEMON:
-					System.out.println(new Timestamp(System.currentTimeMillis()).toString());
-					System.out.println("Recebido comando versao do servico!");
+					logger.info("Recebido comando versao do servico!");
 					
 					// Nesse caso o objeto pipeConteudo armazena o nome do
 					// pipe de retorno que sera usado para enviar a versao
@@ -178,8 +179,7 @@ public class Daemon {
 					versaoDaemon(pipeConteudo);
 			     	break;	
 				case STOP_DAEMON:
-					System.out.println(new Timestamp(System.currentTimeMillis()).toString());
-					System.out.println("Recebido comando stop do servico!");
+					logger.info("Recebido comando stop do servico!");
 					stopDaemon = true;
 					break;
 				}
@@ -211,7 +211,7 @@ public class Daemon {
 			throw new RuntimeException(e) ;
 		}
 		
-		System.out.println("Servico encerrado por requisicao do usuario.");
+		logger.info("Servico encerrado por requisicao do usuario.");
 		System.exit(0);
 	}
 	

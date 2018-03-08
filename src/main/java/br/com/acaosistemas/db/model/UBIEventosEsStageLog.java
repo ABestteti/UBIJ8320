@@ -1,28 +1,51 @@
 package br.com.acaosistemas.db.model;
 
-import java.sql.Timestamp;
+import java.sql.Date;
 
 import br.com.acaosistemas.db.enumeration.StatusEsocialEventosStageEnum;
 
+/**
+ * Entidade representando tabela UBI_EVENTOS_ES_STAGE_LOGS
+ * 
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * </p>
+ * <p>
+ * Alterações:
+ * <p>
+ * 2018.03.07 - ABS - Alteração da PK da tabela UBI_EVENTOS_ES_STAGE_LOGS, 
+ *                    conforme SA 20330.
+ *
+ * @author Anderson Bestteti Santos
+ * 
+ * 
+ */
 public class UBIEventosEsStageLog {
 
-	private Timestamp dtMov;
-	private Timestamp ubesDtMov;
-	private String    mensagem;
+	private Long                          ubesSeqReg;
+	private Long                          seqReg;
+	private Date                          dtMov;
+	private String                        mensagem;
 	private StatusEsocialEventosStageEnum status;
-	private Long      numErro;
+	private Long                          numErro;
 	
-	public Timestamp getDtMov() {
+	public Long getUbesSeqReg() {
+		return ubesSeqReg;
+	}
+	public void setUbesSeqReg(Long ubesSeqReg) {
+		this.ubesSeqReg = ubesSeqReg;
+	}
+	public Long getSeqReg() {
+		return seqReg;
+	}
+	public void setSeqReg(Long seqReg) {
+		this.seqReg = seqReg;
+	}
+	public Date getDtMov() {
 		return dtMov;
 	}
-	public void setDtMov(Timestamp dtMov) {
+	public void setDtMov(Date dtMov) {
 		this.dtMov = dtMov;
-	}
-	public Timestamp getUbesDtMov() {
-		return ubesDtMov;
-	}
-	public void setUbesDtMov(Timestamp ubesDtMov) {
-		this.ubesDtMov = ubesDtMov;
 	}
 	public String getMensagem() {
 		return mensagem;

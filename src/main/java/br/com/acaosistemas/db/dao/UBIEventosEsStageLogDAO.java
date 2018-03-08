@@ -1,17 +1,26 @@
 package br.com.acaosistemas.db.dao;
 
-import oracle.jdbc.OracleConnection;
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 
 import br.com.acaosistemas.db.connection.ConnectionFactory;
 import br.com.acaosistemas.db.model.UBIEventosEsStageLog;
 import br.com.acaosistemas.main.Versao;
+import oracle.jdbc.OracleConnection;
+import oracle.jdbc.OracleTypes;
 
 /**
  * DAO para manipulacao da tabela UBI_EVENTOS_ES_STAGE_LOGS
  * 
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * </p>
+ * <p>
+ * Alterações:
+ * <p>
+ * 2018.03.07 - ABS - Alteração da PK da tabela UBI_EVENTOS_ES_STAGE_LOGS, 
+ *                    conforme SA 20330.
  * @author Anderson Bestteti Santos
  *
  */
@@ -23,69 +32,72 @@ public class UBIEventosEsStageLogDAO {
 		conn = new ConnectionFactory().getConnection();
 	}
 
-//	public void closeConnection () {
-//		try {
-//			conn.close();
-//		} catch (SQLException e) {
-//			throw new RuntimeException(e);
-//		}
-//	}
-	
 	public void insert(UBIEventosEsStageLog pUbelRow) {
-		final String      ORA_DUP_VAL_ON_INDEX_ERROR = "ORA-00001"; // CHAVE DUPLICADA
-		final int         RETRIES                    = 3;
-		PreparedStatement stmt					     = null;
+		PreparedStatement stmt = null;
 
-		// Laço para tratar erro ORA_DUP_VAL_ON_INDEX_ERROR. Se não ocorrer o erro na primeira iteração,
-		// então o laço será interrompido. Caso, contrário serão feitas mais duas tentativas de inserção
-		// com a atualização de pUbelRow com novo Timestamp.		
-		for (int tentativa = 1; tentativa <= RETRIES; tentativa++) {		
+		try {
+			stmt = conn.prepareStatement(
+					"INSERT INTO ubi_eventos_es_stage_logs "
+				  + "  (ubes_seq_reg,"
+				  + "   seq_reg,"
+				  + "   dt_mov," 
+				  + "   mensagem," 
+				  + "   status," 
+				  + "   num_erro) " 
+				  + "VALUES "
+				  + "  (?," 
+				  + "   ?," 
+				  + "   ?," 
+				  + "   ?," 
+				  + "   ?," 
+				  + "   ?)");
+
+			stmt.setLong(1, pUbelRow.getUbesSeqReg());
+			stmt.setLong(2, getNextSeqReg());
+			stmt.setDate(3, pUbelRow.getDtMov());
+			stmt.setString(4, Versao.getStringVersao() + "\n" + pUbelRow.getMensagem());
+			stmt.setInt(5, pUbelRow.getStatus().getId());
+			stmt.setLong(6, pUbelRow.getNumErro());
+
+			stmt.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
 			try {
-				stmt = conn.prepareStatement(
-						"INSERT INTO ubi_eventos_es_stage_logs (ubes_dt_mov,dt_mov,mensagem,status,num_erro) VALUES (?,?,?,?,?)");
-			
-				stmt.setTimestamp(1, pUbelRow.getUbesDtMov());
-				stmt.setTimestamp(2, pUbelRow.getDtMov());
-				stmt.setString(3, Versao.getStringVersao() + "\n" + pUbelRow.getMensagem());
-				stmt.setInt(4, pUbelRow.getStatus().getId());
-				stmt.setLong(5, pUbelRow.getNumErro());
-				
-				stmt.execute();
 				stmt.close();
-				break; // cai fora do laço caso a inserção ocorra sem problema.
 			} catch (SQLException e) {
-				if (e.getMessage().contains(ORA_DUP_VAL_ON_INDEX_ERROR)) {
-					if (tentativa < RETRIES) {
-						try {
-							
-							// Aguarda 250 milisegundos para atualizar o TimeStamp de
-							// pUbelRow.setDtMov.
-							Thread.sleep(250);
-						} catch (InterruptedException e1) {
-							e1.printStackTrace();
-						}
-
-						// Atualiza pUbelRow.setDtMov com o novo TimeStamp para tentar nova
-						// inserção na tabela UBI_EVENTOS_ES_STAGE_LOGS.
-						pUbelRow.setDtMov(new Timestamp(System.currentTimeMillis()));
-
-					} else {
-						System.out.println(
-								RETRIES +
-								" tentativas de inclusão do log sem êxito.");
-						e.printStackTrace();
-					}
-				} else {
-					e.printStackTrace();
-				}				
+				e.printStackTrace();
 			}
-			finally { 
-				try {
-					stmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}			
 		}
 	}
+	
+	/***
+	 * Retorna a sequencia gerada pelo package de banco ubip8100.gera_seq_chave.
+	 * @return Um numero que representa a sequencia gerada pela funcao de banco.
+	 * 
+	 */
+	private Long getNextSeqReg() {
+		Long              nextVal = 0L;
+		CallableStatement    stmt = null;
+
+		try {
+			// Executa a funcao gera_seq_chave do package ubip8100. 
+			stmt = conn.prepareCall("{? = call ubip8100.gera_seq_chave}");
+			
+			// Define que o tipo de retorno da funcao sera um NUMBER
+			stmt.registerOutParameter(1, OracleTypes.NUMBER);
+			stmt.execute();
+			
+			nextVal = stmt.getLong(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}			
+		}
+		return nextVal;
+	}	
 }

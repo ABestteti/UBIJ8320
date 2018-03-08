@@ -1,31 +1,51 @@
 package br.com.acaosistemas.db.model;
 
+import java.sql.Date;
 import java.sql.NClob;
-import java.sql.Timestamp;
 
 import br.com.acaosistemas.db.enumeration.SimNaoEnum;
 import br.com.acaosistemas.db.enumeration.StatusEsocialEventosStageEnum;
 
 /**
  * Entidade representando tabela UBI_EVENTOS_ESOCIAL_STAGE
+ * 
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * </p>
+ * <p>
+ * Alterações:
+ * <p>
+ * 2018.03.07 - ABS - Alteração da PK da tabela UBI_EVENTOS_ESOCIAL_STAGE, 
+ *                    conforme SA 20330.
  *
  * @author Anderson Bestteti Santos
+ * 
+ * 
  */
 public class UBIEventosEsocialStage {
 	
-    private Timestamp  dtMov;
-    private SimNaoEnum xmlAssinado;
+	private Long                          seqReg;
+	private Date                          dtMov;
+    private SimNaoEnum                    xmlAssinado;
     private StatusEsocialEventosStageEnum status;
-    private StringBuffer xmlRetornoValidacao;
-    private NClob xml;
-    private String idESocial;
-    private String rowId;
+    private StringBuffer                  xmlRetornoValidacao;
+    private NClob                         xml;
+    private String                        idESocial;
+    private String                        rowId;
     
-	public Timestamp getDtMov() {
+    public Long getSeqReg() {
+		return seqReg;
+	}
+
+	public void setSeqReg(Long seqReg) {
+		this.seqReg = seqReg;
+	}
+
+    public Date getDtMov() {
 		return dtMov;
 	}
 	
-	public void setDtMov(Timestamp dtMov) {
+	public void setDtMov(Date dtMov) {
 		this.dtMov = dtMov;
 	}
 
