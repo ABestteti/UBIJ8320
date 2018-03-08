@@ -2,6 +2,12 @@ package br.com.acaosistemas.db.model;
 
 /**
  * Entidade representando tabela UBI_RUNTIMES
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * <p>
+ * Alterações:
+ * <p>
+ * 2018.03.07 - ABS - Implementado metodo toString().
  *
  * @author Anderson Bestteti Santos
  */
@@ -55,6 +61,11 @@ public class UBIRuntimes {
 		} else if (!valor.equals(other.valor))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "UBIRuntimes [id=" + id + ", valor=" + valor + "]";
 	}
 
 }

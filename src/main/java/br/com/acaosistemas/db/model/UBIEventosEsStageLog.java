@@ -6,15 +6,14 @@ import br.com.acaosistemas.db.enumeration.StatusEsocialEventosStageEnum;
 
 /**
  * Entidade representando tabela UBI_EVENTOS_ES_STAGE_LOGS
- * 
  * <p>
  * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
- * </p>
  * <p>
  * Alterações:
  * <p>
  * 2018.03.07 - ABS - Alteração da PK da tabela UBI_EVENTOS_ES_STAGE_LOGS, 
  *                    conforme SA 20330.
+ *                  - Implementado metodo toString().
  *
  * @author Anderson Bestteti Santos
  * 
@@ -65,4 +64,10 @@ public class UBIEventosEsStageLog {
 	public void setNumErro(Long numErro) {
 		this.numErro = numErro;
 	}
+	@Override
+	public String toString() {
+		return "UBIEventosEsStageLog [ubesSeqReg=" + ubesSeqReg + ", seqReg=" + seqReg + ", dtMov=" + dtMov
+				+ ", mensagem=" + mensagem + ", status=" + status + ", numErro=" + numErro + "]";
+	}
+
 }

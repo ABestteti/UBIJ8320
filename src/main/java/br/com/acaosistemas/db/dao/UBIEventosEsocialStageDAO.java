@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import br.com.acaosistemas.db.connection.ConnectionFactory;
 import br.com.acaosistemas.db.enumeration.SimNaoEnum;
 import br.com.acaosistemas.db.enumeration.StatusEsocialEventosStageEnum;
@@ -14,20 +17,21 @@ import br.com.acaosistemas.db.model.UBIEventosEsocialStage;
 
 /**
  * DAO para manipulacao da tabela UBI_EVENTOS_ESOCIAL_STAGE
- * 
  * <p>
  * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
- * </p>
  * <p>
  * Alterações:
  * <p>
  * 2018.03.07 - ABS - Alteração da PK da tabela UBI_EVENTOS_ESOCIAL_STAGE, 
  *                    conforme SA 20330.
+ *                  - Adicionado sistema de log com a biblioteca log4j2.
  * @author Anderson Bestteti Santos
  *
  */
 public class UBIEventosEsocialStageDAO {
 
+	private static final Logger logger = LogManager.getLogger(UBIEventosEsocialStageDAO.class);
+	
 	private OracleConnection       conn;
 	private UBIEventosEsocialStage ubes;
 	
@@ -60,12 +64,12 @@ public class UBIEventosEsocialStageDAO {
 			}
 			
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			logger.error(e);
 		} finally {
 			try {
 				stmt.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error(e);
 			}
 		}
 		return ubes;
@@ -110,12 +114,12 @@ public class UBIEventosEsocialStageDAO {
 			}
 
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			logger.error(e);
 		} finally {
 			try {
 				stmt.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error(e);
 			}
 		}
 		return listaUBIEsocialEventosStage;
@@ -135,7 +139,7 @@ public class UBIEventosEsocialStageDAO {
 			stmt.close();
 			
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			logger.error(e);
 		}		
 	}
 
@@ -154,7 +158,7 @@ public class UBIEventosEsocialStageDAO {
 			stmt.close();
 			
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			logger.error(e);
 		}				
 	}
 }

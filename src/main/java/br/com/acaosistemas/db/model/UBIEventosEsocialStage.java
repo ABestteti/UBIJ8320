@@ -8,15 +8,15 @@ import br.com.acaosistemas.db.enumeration.StatusEsocialEventosStageEnum;
 
 /**
  * Entidade representando tabela UBI_EVENTOS_ESOCIAL_STAGE
- * 
  * <p>
  * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
- * </p>
  * <p>
  * Alterações:
  * <p>
  * 2018.03.07 - ABS - Alteração da PK da tabela UBI_EVENTOS_ESOCIAL_STAGE, 
  *                    conforme SA 20330.
+ *                  - Implementado metodo toString().
+ *                    
  *
  * @author Anderson Bestteti Santos
  * 
@@ -96,4 +96,11 @@ public class UBIEventosEsocialStage {
 	public void setIdESocial(String idESocial) {
 		this.idESocial = idESocial;
 	}
+
+	@Override
+	public String toString() {
+		return "UBIEventosEsocialStage [seqReg=" + seqReg + ", dtMov=" + dtMov + ", xmlAssinado=" + xmlAssinado
+				+ ", status=" + status + ", rowId=" + rowId + "]";
+	}
+
 }

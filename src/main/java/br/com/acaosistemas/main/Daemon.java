@@ -15,10 +15,15 @@ import oracle.jdbc.OracleTypes;
 
 /**
  * Classe reponsavel por ler o pipe de comunicacao do banco.
- * 
  * <p>
  * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
- * </p>
+ * <p>
+ * Alterações:
+ * <p>
+ * 2018.03.07 - ABS - Alteração da PK das tabelas UBI_EVENTOS_ES_STAGE_LOGS 
+ *                    e UBI_EVENTOS_ESOCIAL_STAGE, conforme SA 20330.
+ *                  - Adicionado sistema de log com a biblioteca log4j2.
+ *                  
  * @author Anderson Bestteti
  * <p>
  * Referencias:<br>
@@ -27,7 +32,9 @@ import oracle.jdbc.OracleTypes;
  *  https://docs.oracle.com/cd/B19306_01/java.102/b14355/toc.htm<br>
  */
 public class Daemon {
-
+	
+	private static final Logger logger = LogManager.getLogger(Daemon.class);	
+	
 	private static final int STOP_DAEMON             = 1;
 	private static final int CONSULTAR_STATUS        = 2;
 	private static final int CONSULTAR_VERSAO_DAEMON = 3;
@@ -36,9 +43,7 @@ public class Daemon {
 
 	private OracleConnection  conn;
 	private CallableStatement stmt;
-
-	private static final Logger logger = LogManager.getLogger(Daemon.class);	
-			
+		
 	public static void main(String[] args) {
 
 		if (args.length != 3) {
@@ -257,7 +262,6 @@ public class Daemon {
 			stmt.setString(3, pPipeReturn);
 			
 			stmt.execute();
-			
 			stmt.close();
 			
 		} catch (SQLException e) {

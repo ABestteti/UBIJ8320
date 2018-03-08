@@ -21,16 +21,14 @@ import br.com.acaosistemas.wsclientes.ClienteWSAssinarEvento;
  * Classe responsavel por processar todos os eventos da tabela UBI_EVENTOS_ESOCIAL_STAGE que
  * estejam com status "A ASSINAR". Para cada registro retornado, sera invocado o web service
  * de assinatura de aventos do UBI.
- * 
  * <p>
  * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
- * </p>
- * </p>
  * <p>
  * Alterações:
  * <p>
  * 2018.03.07 - ABS - Alteração da PK das tabelas UBI_EVENTOS_ES_STAGE_LOGS 
  *                    e UBI_EVENTOS_ESOCIAL_STAGE, conforme SA 20330.
+ *                  - Adicionado sistema de log com a biblioteca log4j2.
  *                    
  * @author Anderson Bestteti Santos
  *

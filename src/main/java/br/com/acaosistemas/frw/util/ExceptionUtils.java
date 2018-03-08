@@ -9,10 +9,16 @@ import br.com.acaosistemas.db.model.UBIEventosEsStageLog;
 import br.com.acaosistemas.db.model.UBIEventosEsocialStage;
 
 /**
+ * Classe utilitaria manipular informacoes de excecoes
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * <p>
+ * Alterações:
+ * <p>
+ * 2018.03.08 - ABS - Adicionado JavaDoc.
  * 
  * @author Anderson Bestteti Santos
  *
- * Classe utilitaria manipular informacoes de excecoes
  */
 public final class ExceptionUtils {
 
@@ -60,6 +66,5 @@ public final class ExceptionUtils {
 		ubel.setNumErro(new Long(pUbesRow.getStatus().getId()));
 		
 		ubelDAO.insert(ubel);
-		//ubelDAO.closeConnection();		
 	}
 }
