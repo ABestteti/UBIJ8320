@@ -4,23 +4,14 @@
 <!-- https://logging.apache.org/log4j/2.x/manual/appenders.html -->
 <Configuration status="INFO">
 	<Appenders>
-		<File name="CustomLogFile" fileName="UBIJ8320.log"
+		<RollingFile name="RollingFile" fileName="UBIJ8320.log"
+			filePattern="UBIJ8320-%d{yyyy-MM-dd}-%i.log.zip"
 			immediateFlush="true" bufferedIO="true">
 			<PatternLayout>
 				<Pattern>%d{DATE} %-5level %logger{36} - %msg%n</Pattern>
 			</PatternLayout>
 			<Policies>
-				<SizeBasedTriggeringPolicy size="50 MB" />
-			</Policies>			
-		</File>
-		<RollingFile name="RollingFile" fileName="UBIJ8320R.log"
-			filePattern="UBIJ8320R-%d{MM-dd-yyyy}-%i.log.zip"
-			immediateFlush="true" bufferedIO="true">
-			<PatternLayout>
-				<Pattern>%d{DATE} %-5level %logger{36} - %msg%n</Pattern>
-			</PatternLayout>
-			<Policies>
-				<SizeBasedTriggeringPolicy size="50 MB" />
+				<SizeBasedTriggeringPolicy size="5 MB" />
 			</Policies>
 		</RollingFile>
 		<Console name="Console" target="SYSTEM_OUT">
@@ -29,9 +20,8 @@
 	</Appenders>
 	<Loggers>
 		<Root level="all">
-			<!-- <AppenderRef ref="CustomLogFile" /> -->
 			<AppenderRef ref="RollingFile" />
-			<AppenderRef ref="Console" />
+			<!-- <AppenderRef ref="Console" --> />
 		</Root>
 	</Loggers>
 </Configuration>

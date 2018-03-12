@@ -50,8 +50,10 @@ public class ConnectionFactory {
 		           	// Cria uma conexao com o banco Oracle
 	        		connDB = (OracleConnection) pds.getConnection();
 	        		
-	        		logger.info(  "Conectado ao banco " 
-	        		            + DBConnectionInfo.getDbStrConnect()
+	        		logger.info(  "Conectado ao banco "
+	        				    + DBConnectionInfo.getDbUserName()
+	        				    + "@"
+	        				    + DBConnectionInfo.getDbStrConnect()
 	        		            + " com sucesso.");
 	        	}
 	        } catch (SQLException e) {
