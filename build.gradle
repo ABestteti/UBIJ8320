@@ -52,8 +52,8 @@ dependencies {
     // 'test.useTestNG()' to your build script.
     testCompile 'junit:junit:4.12'
     
-    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.1'
-    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.1'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.9.1'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.9.1'
               
     compile files('lib/ojdbc7.jar')
     compile files('lib/ucp.jar')     
@@ -70,7 +70,7 @@ jar {
         attributes 'Implementation-Title': appName,
         	           'Implementation-Version': versionAcao,
                    'Main-Class': 'br.com.acaosistemas.main.Daemon',
-        	           'Class-Path': configurations.runtime.files.collect { "lib/$it.name" }.join(' ')
+        	           'Class-Path': "resources/ " + configurations.runtime.files.collect { "lib/$it.name" }.join(' ')
     }
     // How-to add class path:
     //     https://stackoverflow.com/questions/22659463/add-classpath-in-manifest-using-gradle
