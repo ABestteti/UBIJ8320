@@ -116,6 +116,7 @@ public class Daemon {
             try {
 				Thread.sleep(5000);
 			} catch (InterruptedException e1) {
+				logger.error(e1);
 				throw new RuntimeException(e1);
 			}
             
