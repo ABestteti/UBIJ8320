@@ -10,7 +10,7 @@ import oracle.ucp.jdbc.PoolDataSource;
 import oracle.ucp.jdbc.PoolDataSourceFactory;
 
 /**
- * Classe reponsavel estabelecer a conexao com o banco Oracleo.
+ * Classe reponsavel estabelecer a conexao com o banco Oracle.
  * <p>
  * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
  * <p>
