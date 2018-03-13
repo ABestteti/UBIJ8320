@@ -137,6 +137,7 @@ public class Daemon {
 				pipeStatus = stmt.getInt(1);
 
 			} catch (SQLException e) {
+				logger.error(e);
 				throw new RuntimeException(e);
 			}
 			
@@ -161,6 +162,7 @@ public class Daemon {
 					pipeConteudo = stmt.getString(2);
 							;
 				} catch (SQLException e) {
+					logger.error(e);
 					throw new RuntimeException(e);
 				}
 
@@ -194,6 +196,7 @@ public class Daemon {
 				   stmt.close();
 				}
 			} catch (SQLException e) {
+				logger.error(e);
 				throw new RuntimeException(e) ;
 			}
 			
@@ -212,6 +215,7 @@ public class Daemon {
 			stmt.close();
 	        conn.close();
 		} catch (SQLException e) {
+			logger.error(e);
 			throw new RuntimeException(e) ;
 		}
 		
@@ -241,6 +245,7 @@ public class Daemon {
 			stmt.close();
 			
 		} catch (SQLException e) {
+			logger.error(e);
 			throw new RuntimeException(e);
 		}	    
 	}
@@ -266,6 +271,7 @@ public class Daemon {
 			stmt.close();
 			
 		} catch (SQLException e) {
+			logger.error(e);
 			throw new RuntimeException(e);
 		}	    
 	}
