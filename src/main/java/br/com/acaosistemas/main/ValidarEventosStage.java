@@ -60,7 +60,7 @@ public class ValidarEventosStage {
 			
 			xmlDsigScan.close();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.error(e);
 		}
 
 		logger.info("   Validando XMLs da UBI_EVENTOS_ESOCIAL_STAGE...");
