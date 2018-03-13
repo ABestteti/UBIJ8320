@@ -57,7 +57,7 @@ public class ConnectionFactory {
 	        		            + " com sucesso.");
 	        	}
 	        } catch (SQLException e) {
-	            logger.fatal(  "\nErro durante a conexo com o banco de dados.\n"
+	            logger.fatal(  "\nErro durante a conexao com o banco de dados.\n"
 	                         + "Revise se os parametros usuario, senha e string\n"
 	            	         + "de conexao estao corretos, ou se existe algum problema com a rede.",
 	            	        e);
