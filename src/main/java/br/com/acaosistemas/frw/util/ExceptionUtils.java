@@ -2,7 +2,6 @@ package br.com.acaosistemas.frw.util;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.sql.Timestamp;
 
 import br.com.acaosistemas.db.dao.UBIEventosEsStageLogDAO;
 import br.com.acaosistemas.db.dao.UBIEventosEsocialStageDAO;
@@ -10,10 +9,16 @@ import br.com.acaosistemas.db.model.UBIEventosEsStageLog;
 import br.com.acaosistemas.db.model.UBIEventosEsocialStage;
 
 /**
+ * Classe utilitaria manipular informacoes de excecoes
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * <p>
+ * Alterações:
+ * <p>
+ * 2018.03.08 - ABS - Adicionado JavaDoc.
  * 
  * @author Anderson Bestteti Santos
  *
- * Classe utilitaria manipular informacoes de excecoes
  */
 public final class ExceptionUtils {
 
@@ -50,8 +55,8 @@ public final class ExceptionUtils {
 		UBIEventosEsStageLogDAO ubelDAO = new UBIEventosEsStageLogDAO();
 		UBIEventosEsStageLog    ubel    = new UBIEventosEsStageLog();
 		
-		ubel.setUbesDtMov(pUbesRow.getDtMov());
-		ubel.setDtMov(new Timestamp(System.currentTimeMillis()));
+		ubel.setUbesSeqReg(pUbesRow.getSeqReg());
+		ubel.setDtMov(new java.sql.Date(new java.util.Date().getTime()));
 		ubel.setStatus(pUbesRow.getStatus());
 		ubel.setMensagem(pUbesRow.getStatus().getDescricao() +
 				        "\n"                                 +
@@ -61,6 +66,5 @@ public final class ExceptionUtils {
 		ubel.setNumErro(new Long(pUbesRow.getStatus().getId()));
 		
 		ubelDAO.insert(ubel);
-		ubelDAO.closeConnection();		
 	}
 }

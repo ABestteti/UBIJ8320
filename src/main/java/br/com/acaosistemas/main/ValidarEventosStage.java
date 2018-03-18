@@ -3,10 +3,12 @@ package br.com.acaosistemas.main;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import br.com.acaosistemas.db.dao.UBIEventosEsocialStageDAO;
 import br.com.acaosistemas.db.dao.UBIXsdsDAO;
@@ -22,13 +24,19 @@ import br.com.acaosistemas.xml.XMLValidator;
  * 
  * <p>
  * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
- * </p>
+ * <p>
+ * Alterações:
+ * <p>
+ * 2018.03.08 - ABS - Adicionado sistema de log com a biblioteca log4j2.
+ * 
  * 
  * @author Anderson Bestteti Santos
  *
  */
 public class ValidarEventosStage {
 
+	private static final Logger logger = LogManager.getLogger(ValidarEventosStage.class);
+	
 	/**
 	 * Recupera todos os registros que estejom com status "A VALIDAR" na
 	 * tabela UBI_EVENTOS_ESOCIAL_STAGE.
@@ -52,21 +60,20 @@ public class ValidarEventosStage {
 			
 			xmlDsigScan.close();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.error(e);
 		}
 
-		System.out.println("   Validando XMLs da UBI_EVENTOS_ESOCIAL_STAGE...");
+		logger.info("   Validando XMLs da UBI_EVENTOS_ESOCIAL_STAGE...");
 		
 		for (UBIEventosEsocialStage ubesRow : listaUbiEventosStage) {
-			System.out.println("     ".concat(new Timestamp(System.currentTimeMillis()).toString()));
-			System.out.println("     Processando rowId...: "+ubesRow.getRowId());
-			System.out.println("     Data de movimentacao: "+ubesRow.getDtMov());
+			logger.info("     Processando rowId: "+ubesRow.getRowId());
+			logger.info("     SeqReq...........: "+ubesRow.getSeqReg());
 						
 			StringBuffer xmlEvento = new StringBuffer();
 			try {
 				xmlEvento.append(ubesRow.getXml().getSubString(1, (int) ubesRow.getXml().length()));
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error(e);
 			}
 			
 			// Recupera o namespace que referencia o XSD do atual XML do evento do eSocial
@@ -77,7 +84,7 @@ public class ValidarEventosStage {
 			try {
 				xsdList.add(new StringBuffer(xsdRow.getDocumento().getSubString(1, (int) xsdRow.getDocumento().length())));
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error(e);
 			}
 
 			xmlValidator.validate(ubesRow.getIdESocial(), xmlEvento, xsdList);
@@ -89,22 +96,18 @@ public class ValidarEventosStage {
 				
 				ubesDAO = new UBIEventosEsocialStageDAO();				
 				ubesDAO.updateXmlRetornoValidacao(ubesRow);
-				ubesDAO.closeConnection();
 			} else {
 				// O XML passou com sucesso pela validacao com o XSD
 				ubesRow.setStatus(StatusEsocialEventosStageEnum.VALIDADO_COM_SUCESSO);
 				
 				ubesDAO = new UBIEventosEsocialStageDAO();				
 				ubesDAO.updateStatus(ubesRow);
-				ubesDAO.closeConnection();				
 			}
 						
 			// Remove o XSD do XML do evento da lista de XSDs
 			xsdList.clear();
 		}
-		xsdsDAO.closeConnection();
-		ubesDAO.closeConnection();
 		
-		System.out.println("   Finalizado validacao dos XMLs da UBI_EVENTOS_ESOCIAL_STAGE.");
+		logger.info("   Finalizado validacao dos XMLs da UBI_EVENTOS_ESOCIAL_STAGE.");
 	}
 }

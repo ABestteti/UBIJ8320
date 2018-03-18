@@ -2,6 +2,19 @@ package br.com.acaosistemas.db.enumeration;
 
 import br.com.acaosistemas.frw.enumeration.BaseEnum;
 
+/**
+ * Enumeracao para representar os valores de status que uma evento do eSocial,
+ * armazenado da tabela UBI_EVENTOS_ESOCIAL_STAGE, pode assumir.
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * <p>
+ * Alterações:
+ * <p>
+ * 2018.03.08 - ABS - Adiconado JavaDOc.
+ * 
+ * @author Anderson Bestteti Santos
+ *
+ */
 public enum StatusEsocialEventosStageEnum implements BaseEnum<Integer> {
 	/**
      * Indica que o evento da stage esta pronto para ser assinado (101).

@@ -1,37 +1,49 @@
 package br.com.acaosistemas.main;
 
 import java.sql.CallableStatement;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Timestamp;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import br.com.acaosistemas.db.connection.ConnectionFactory;
 import br.com.acaosistemas.db.connection.DBConnectionInfo;
 import br.com.acaosistemas.db.dao.UBIRuntimesDAO;
 import br.com.acaosistemas.frw.util.ResetPipe;
+import oracle.jdbc.OracleConnection;
 import oracle.jdbc.OracleTypes;
 
 /**
- * 
+ * Classe reponsavel por ler o pipe de comunicacao do banco.
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * <p>
+ * Alterações:
+ * <p>
+ * 2018.03.07 - ABS - Alteração da PK das tabelas UBI_EVENTOS_ES_STAGE_LOGS 
+ *                    e UBI_EVENTOS_ESOCIAL_STAGE, conforme SA 20330.
+ *                  - Adicionado sistema de log com a biblioteca log4j2.
+ *                  
  * @author Anderson Bestteti
- * Classe reponsavel por ler o pipe de comunicacao do banco
- * 
- * Referencias:
- *  https://stackoverflow.com/questions/19333011/how-to-call-a-stored-function-from-jdbc
- *  http://docs.oracle.com/cd/A84870_01/doc/java.816/a81354/samapp2.htm
- *  https://docs.oracle.com/cd/B19306_01/java.102/b14355/toc.htm
+ * <p>
+ * Referencias:<br>
+ *  https://stackoverflow.com/questions/19333011/how-to-call-a-stored-function-from-jdbc<br>
+ *  http://docs.oracle.com/cd/A84870_01/doc/java.816/a81354/samapp2.htm<br>
+ *  https://docs.oracle.com/cd/B19306_01/java.102/b14355/toc.htm<br>
  */
 public class Daemon {
-
+	
+	private static final Logger logger = LogManager.getLogger(Daemon.class);	
+	
 	private static final int STOP_DAEMON             = 1;
 	private static final int CONSULTAR_STATUS        = 2;
 	private static final int CONSULTAR_VERSAO_DAEMON = 3;
 	
 	private static final int DEAMON_ALIVE     = 1;
 
-	private Connection conn;
+	private OracleConnection  conn;
 	private CallableStatement stmt;
-
+		
 	public static void main(String[] args) {
 
 		if (args.length != 3) {
@@ -41,6 +53,8 @@ public class Daemon {
 			System.out.println("java -jar UBIJ8320.jar usuarioDB senhaDB servidorDB:portaListner:instanciaDB");
 			System.exit(1);
 		}
+		
+		logger.info("\n".concat(Versao.ver()));
 		
 		Daemon procPoboxXml = new Daemon();
 		
@@ -76,7 +90,7 @@ public class Daemon {
 		UBIRuntimesDAO runtimeDAO = new UBIRuntimesDAO();
 		
 		pipeName = runtimeDAO.getRuntimeValue("PIPEUBIASSEVT");
-		runtimeDAO.closeConnection();
+		//runtimeDAO.closeConnection();
 		
 		if (pipeName == null) {
 			throw new RuntimeException("O runtime PIPEUBIASSEVT nao esta cadastrado no UBI.");
@@ -88,9 +102,7 @@ public class Daemon {
 		// Remove todas as mensagens do pipe indicado em "pipeName"
 		ResetPipe.reset(conn, pipeName);
 
-		System.out.println(Versao.ver());
-		
-		System.out.println("Processando registros da area de stage...");
+		logger.info("Processando registros da area de stage...");
 		
 		// Loop para leitura constante do pipe de comunicacao
 		// do deamon e por procura de registros com status 0 (nao processado)
@@ -104,6 +116,7 @@ public class Daemon {
             try {
 				Thread.sleep(5000);
 			} catch (InterruptedException e1) {
+				logger.error(e1);
 				throw new RuntimeException(e1);
 			}
             
@@ -124,6 +137,7 @@ public class Daemon {
 				pipeStatus = stmt.getInt(1);
 
 			} catch (SQLException e) {
+				logger.error(e);
 				throw new RuntimeException(e);
 			}
 			
@@ -148,13 +162,13 @@ public class Daemon {
 					pipeConteudo = stmt.getString(2);
 							;
 				} catch (SQLException e) {
+					logger.error(e);
 					throw new RuntimeException(e);
 				}
 
 				switch (pipeCmd) {
 				case CONSULTAR_STATUS:
-					System.out.println(new Timestamp(System.currentTimeMillis()).toString());
-					System.out.println("Recebido comando status do servico!");
+					logger.info("Recebido comando status do servico!");
 					
 					// Nesse caso o objeto pipeConteudo armazena o nome do
 					// pipe de retorno que sera usado para enviar o status
@@ -163,8 +177,7 @@ public class Daemon {
 					statusDaemon(pipeConteudo);
 			     	break;
 				case CONSULTAR_VERSAO_DAEMON:
-					System.out.println(new Timestamp(System.currentTimeMillis()).toString());
-					System.out.println("Recebido comando versao do servico!");
+					logger.info("Recebido comando versao do servico!");
 					
 					// Nesse caso o objeto pipeConteudo armazena o nome do
 					// pipe de retorno que sera usado para enviar a versao
@@ -172,8 +185,7 @@ public class Daemon {
 					versaoDaemon(pipeConteudo);
 			     	break;	
 				case STOP_DAEMON:
-					System.out.println(new Timestamp(System.currentTimeMillis()).toString());
-					System.out.println("Recebido comando stop do servico!");
+					logger.info("Recebido comando stop do servico!");
 					stopDaemon = true;
 					break;
 				}
@@ -184,6 +196,7 @@ public class Daemon {
 				   stmt.close();
 				}
 			} catch (SQLException e) {
+				logger.error(e);
 				throw new RuntimeException(e) ;
 			}
 			
@@ -202,10 +215,11 @@ public class Daemon {
 			stmt.close();
 	        conn.close();
 		} catch (SQLException e) {
+			logger.error(e);
 			throw new RuntimeException(e) ;
 		}
 		
-		System.out.println("Servico encerrado por requisicao do usuario.");
+		logger.info("Servico encerrado por requisicao do usuario.");
 		System.exit(0);
 	}
 	
@@ -231,6 +245,7 @@ public class Daemon {
 			stmt.close();
 			
 		} catch (SQLException e) {
+			logger.error(e);
 			throw new RuntimeException(e);
 		}	    
 	}
@@ -253,10 +268,10 @@ public class Daemon {
 			stmt.setString(3, pPipeReturn);
 			
 			stmt.execute();
-			
 			stmt.close();
 			
 		} catch (SQLException e) {
+			logger.error(e);
 			throw new RuntimeException(e);
 		}	    
 	}

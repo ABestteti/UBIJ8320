@@ -2,7 +2,9 @@ package br.com.acaosistemas.frw.enumeration;
 
 /**
  * Interface que define se uma enumeracao e identificavel por ID.
- *
+ * <p>
+ * <b>Empresa:</b> Acao Sistemas de Informatica Ltda.
+ * <p>
  * @author Estevao Cavinato
  * @param <T> Tipo da chave da enumeracao.
  */
